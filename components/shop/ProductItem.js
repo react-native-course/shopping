@@ -1,5 +1,14 @@
 import React from 'react';
-import {View, Text, Image, Button, StyleSheet} from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    Button,
+    TouchableOpacity,
+    TouchableNativeFeedback,
+    Platform,
+    StyleSheet
+} from 'react-native';
 import Colors from "../../constants/Colors";
 
 const styles = StyleSheet.create({
@@ -13,6 +22,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         height: 300,
         margin: 20,
+    },
+    touchable: {
+        borderRadius: 10,
+        overflow: 'hidden',
     },
     imageContainer: {
         width: '100%',
@@ -31,10 +44,12 @@ const styles = StyleSheet.create({
         padding: 10
     },
     title: {
+        fontFamily: 'open-sans-bold',
         fontSize: 18,
-        marginVertical: 4,
+        marginVertical: 2,
     },
     price: {
+        fontFamily: 'open-sans',
         fontSize: 14,
         color: '#888',
     },
@@ -47,21 +62,35 @@ const styles = StyleSheet.create({
     },
 });
 
-const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => (
-    <View style={styles.product}>
-        <View style={styles.imageContainer}>
-            <Image source={{uri: image}}
-                   style={styles.image}/>
+const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => {
+    let TouchableCmp = TouchableOpacity;
+
+    if (Platform.OS === 'android' && Platform.Version >= 21) {
+        TouchableCmp = TouchableNativeFeedback;
+    }
+
+    return (
+        <View style={styles.product}>
+            <View style={styles.touchable}>
+                <TouchableCmp onPress={onViewDetail} useForeground>
+                    <View>
+                        <View style={styles.imageContainer}>
+                            <Image source={{uri: image}}
+                                   style={styles.image}/>
+                        </View>
+                        <View style={styles.details}>
+                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.price}>${price.toFixed(2)}</Text>
+                        </View>
+                        <View style={styles.actions}>
+                            <Button title="View Details" onPress={onViewDetail} color={Colors.primary}/>
+                            <Button title="To Cart" onPress={onAddToCart} color={Colors.primary}/>
+                        </View>
+                    </View>
+                </TouchableCmp>
+            </View>
         </View>
-        <View style={styles.details}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.price}>${price.toFixed(2)}</Text>
-        </View>
-        <View style={styles.actions}>
-            <Button title="View Details" onPress={onViewDetail} color={Colors.primary}/>
-            <Button title="To Cart" onPress={onAddToCart} color={Colors.primary}/>
-        </View>
-    </View>
-);
+    );
+};
 
 export default ProductItem;

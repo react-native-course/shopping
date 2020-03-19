@@ -1,0 +1,73 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+//selectors
+import {
+  getCartItems,
+  getCartTotalAmount
+} from '../../store/selectors/cartSelectors';
+import Colors from '../../constants/Colors';
+
+const styles = StyleSheet.create({
+  screen: {
+    margin: 20
+  },
+  summary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
+    borderRadius: 10,
+    backgroundColor: '#fff'
+  },
+  summaryText: {
+    fontFamily: 'open-sans-bold',
+    fontSize: 18
+  },
+  amount: {
+    color: Colors.primary
+  }
+});
+
+const CartScreen = ({ items, totalAmount }) => {
+  const transformedCartItems = [];
+  for (const key in items) {
+    transformedCartItems.push({
+      productId: key,
+      productTitle: items[key].productTitle,
+      productPrice: items[key].productPrice,
+      quantity: items[key].quantity,
+      sum: items[key].sum
+    });
+  }
+  return (
+    <View style={styles.screen}>
+      <View style={styles.summary}>
+        <Text style={styles.summaryText}>
+          Total: <Text style={styles.amount}>${totalAmount.toFixed(2)}</Text>
+        </Text>
+        <Button
+          color={Colors.accent}
+          title="Order Now"
+          disabled={transformedCartItems.length === 0}
+        />
+      </View>
+      <View>
+        <Text>CART ITEMS</Text>
+      </View>
+    </View>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  items: getCartItems({ state }),
+  totalAmount: getCartTotalAmount({ state })
+});
+
+export default connect(mapStateToProps)(CartScreen);

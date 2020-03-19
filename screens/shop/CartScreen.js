@@ -6,7 +6,10 @@ import {
   getCartItems,
   getCartTotalAmount
 } from '../../store/selectors/cartSelectors';
+//constants
 import Colors from '../../constants/Colors';
+//components
+import CartItem from '../../components/shop/CartItem';
 
 const styles = StyleSheet.create({
   screen: {
@@ -58,9 +61,18 @@ const CartScreen = ({ items, totalAmount }) => {
           disabled={transformedCartItems.length === 0}
         />
       </View>
-      <View>
-        <Text>CART ITEMS</Text>
-      </View>
+      <FlatList
+        data={transformedCartItems}
+        keyExtractor={(item) => item.productId}
+        renderItem={(itemData) => (
+          <CartItem
+            quantity={itemData.item.quantity}
+            title={itemData.item.productTitle}
+            amount={itemData.item.sum}
+            onRemove={() => {}}
+          />
+        )}
+      />
     </View>
   );
 };

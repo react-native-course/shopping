@@ -1,5 +1,5 @@
 //action types
-import { ADD_TO_CART } from '../actionTypes';
+import { ADD_TO_CART, REMOVE_FROM_CART } from '../actionTypes';
 //models
 import CartItem from '../../models/cart-item';
 //utilities
@@ -12,7 +12,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_TO_CART:
+    case ADD_TO_CART: {
       const { price, title, id } = action.product;
       let updatedOrNewCartItem;
 
@@ -34,6 +34,28 @@ const reducer = (state = initialState, action) => {
         },
         totalAmount: state.totalAmount + price
       });
+    }
+    case REMOVE_FROM_CART: {
+      const updatedCartItems = { ...state.items },
+        selectedCartItem = updatedCartItems[action.pid];
+
+      if (selectedCartItem.quantity > 1) {
+        //reduce quantity
+        const updatedCartItem = new CartItem(
+          selectedCartItem.quantity - 1,
+          selectedCartItem.productPrice,
+          selectedCartItem.productTitle,
+          selectedCartItem.sum - selectedCartItem.productPrice
+        );
+        updatedCartItems[action.pid] = updatedCartItem;
+      } else {
+        delete updatedCartItems[action.pid];
+      }
+      return updateObject(state, {
+        items: updatedCartItems,
+        totalAmount: state.totalAmount - selectedCartItem.productPrice
+      });
+    }
     default:
       return state;
   }

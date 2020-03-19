@@ -6,6 +6,8 @@ import {
   getCartItems,
   getCartTotalAmount
 } from '../../store/selectors/cartSelectors';
+//actions
+import { removeFromCart } from '../../store/actions/cartActions';
 //constants
 import Colors from '../../constants/Colors';
 //components
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const CartScreen = ({ items, totalAmount }) => {
+const CartScreen = ({ items, totalAmount, dispatch }) => {
   const transformedCartItems = [];
   for (const key in items) {
     transformedCartItems.push({
@@ -69,7 +71,7 @@ const CartScreen = ({ items, totalAmount }) => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
-            onRemove={() => {}}
+            onRemove={() => dispatch(removeFromCart(itemData.item.productId))}
           />
         )}
       />

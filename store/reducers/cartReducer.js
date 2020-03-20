@@ -1,5 +1,5 @@
 //action types
-import { ADD_TO_CART, REMOVE_FROM_CART } from '../actionTypes';
+import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ORDER } from '../actionTypes';
 //models
 import CartItem from '../../models/cart-item';
 //utilities
@@ -55,6 +55,9 @@ const reducer = (state = initialState, action) => {
         items: updatedCartItems,
         totalAmount: state.totalAmount - selectedCartItem.productPrice
       });
+    }
+    case ADD_ORDER: {
+      return initialState;
     }
     default:
       return state;

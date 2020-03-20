@@ -40,12 +40,27 @@ const ProductsOverviewScreen = ({
   );
 };
 
-ProductsOverviewScreen.navigationOptions = ({ navigation: { navigate } }) => ({
+ProductsOverviewScreen.navigationOptions = ({
+  navigation: { navigate, toggleDrawer }
+}) => ({
   headerTitle: 'All Products',
+  headerLeft: (
+    <HeaderButtons
+      HeaderButtonComponent={CustomHeaderButton}
+      title="menu content"
+    >
+      <Item
+        title="Menu"
+        label="Menu"
+        iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+        onPress={() => toggleDrawer()}
+      />
+    </HeaderButtons>
+  ),
   headerRight: (
     <HeaderButtons
       HeaderButtonComponent={CustomHeaderButton}
-      title="all products"
+      title="cart content"
     >
       <Item
         title="Cart"

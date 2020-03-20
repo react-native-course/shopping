@@ -8,6 +8,7 @@ import {
 } from '../../store/selectors/cartSelectors';
 //actions
 import { removeFromCart } from '../../store/actions/cartActions';
+import { addOrder } from '../../store/actions/ordersActions';
 //constants
 import Colors from '../../constants/Colors';
 //components
@@ -61,6 +62,9 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
           color={Colors.accent}
           title="Order Now"
           disabled={transformedCartItems.length === 0}
+          onPress={() =>
+            dispatch(addOrder({ cartItems: transformedCartItems, totalAmount }))
+          }
         />
       </View>
       <FlatList

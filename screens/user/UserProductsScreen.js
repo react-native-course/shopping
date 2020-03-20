@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FlatList, Platform } from 'react-native';
+import { FlatList, Button } from 'react-native';
 //selectors
 import { getUserProducts } from '../../store/selectors/productsSelectors';
+//constants
+import Colors from '../../constants/Colors';
 //components
 import ProductItem from '../../components/shop/ProductItem';
 
@@ -15,9 +17,11 @@ const UserProductsScreen = ({ userProducts }) => (
         image={itemData.item.imageUrl}
         title={itemData.item.title}
         price={itemData.item.price}
-        onViewDetail={() => {}}
-        onAddToCart={() => {}}
-      />
+        onSelect={() => {}}
+      >
+        <Button title="Edit" onPress={() => {}} color={Colors.primary} />
+        <Button title="Delete" onPress={() => {}} color={Colors.primary} />
+      </ProductItem>
     )}
   />
 );

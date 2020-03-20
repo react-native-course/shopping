@@ -3,14 +3,11 @@ import {
   View,
   Text,
   Image,
-  Button,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
   StyleSheet
 } from 'react-native';
-//constnats
-import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   product: {
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const ProductItem = ({ image, title, price, onViewDetail, onAddToCart }) => {
+const ProductItem = ({ image, title, price, onSelect, children }) => {
   let TouchableCmp = TouchableOpacity;
 
   if (Platform.OS === 'android' && Platform.Version >= 21) {
@@ -73,7 +70,7 @@ const ProductItem = ({ image, title, price, onViewDetail, onAddToCart }) => {
   return (
     <View style={styles.product}>
       <View style={styles.touchable}>
-        <TouchableCmp onPress={onViewDetail} useForeground>
+        <TouchableCmp onPress={onSelect} useForeground>
           <View>
             <View style={styles.imageContainer}>
               <Image source={{ uri: image }} style={styles.image} />
@@ -82,18 +79,7 @@ const ProductItem = ({ image, title, price, onViewDetail, onAddToCart }) => {
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.price}>${price.toFixed(2)}</Text>
             </View>
-            <View style={styles.actions}>
-              <Button
-                title="View Details"
-                onPress={onViewDetail}
-                color={Colors.primary}
-              />
-              <Button
-                title="To Cart"
-                onPress={onAddToCart}
-                color={Colors.primary}
-              />
-            </View>
+            <View style={styles.actions}>{children}</View>
           </View>
         </TouchableCmp>
       </View>

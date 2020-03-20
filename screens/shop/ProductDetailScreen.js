@@ -65,10 +65,6 @@ const ProductDetailScreen = ({
   );
 };
 
-ProductDetailScreen.navigationOptions = ({ navigation: { getParam } }) => ({
-  headerTitle: getParam('productTitle')
-});
-
 const mapStateToProps = (state) => ({
   availableProducts: getAvailableProducts({ state })
 });

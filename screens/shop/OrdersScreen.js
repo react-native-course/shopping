@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FlatList, Text, Platform } from 'react-native';
-//header buttons
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { FlatList } from 'react-native';
 //selectors
 import { getOrders } from '../../store/selectors/ordersSelectors';
 //components
-import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import OrderItem from '../../components/shop/OrderItem';
 
 const OrdersScreen = ({ orders }) => (
@@ -22,22 +19,6 @@ const OrdersScreen = ({ orders }) => (
     )}
   />
 );
-
-OrdersScreen.navigationOptions = ({ navigation: { toggleDrawer } }) => ({
-  headerLeft: (
-    <HeaderButtons
-      HeaderButtonComponent={CustomHeaderButton}
-      title="menu content"
-    >
-      <Item
-        title="Menu"
-        label="Menu"
-        iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-        onPress={() => toggleDrawer()}
-      />
-    </HeaderButtons>
-  )
-});
 
 const mapStateToProps = (state) => ({
   orders: getOrders({ state })

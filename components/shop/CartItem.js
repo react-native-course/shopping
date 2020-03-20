@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const CartItem = ({ quantity, title, amount, onRemove }) => (
+const CartItem = ({ quantity, title, amount, onRemove, deletable }) => (
   <View style={styles.cartItem}>
     <View style={styles.itemData}>
       <Text style={styles.quantity}>{quantity} </Text>
@@ -43,13 +43,15 @@ const CartItem = ({ quantity, title, amount, onRemove }) => (
     </View>
     <View style={styles.itemData}>
       <Text style={styles.mainText}>${amount.toFixed(2)}</Text>
-      <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
-        <Ionicons
-          name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
-          size={23}
-          color="red"
-        />
-      </TouchableOpacity>
+      {deletable && (
+        <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
+          <Ionicons
+            name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
+            size={23}
+            color="red"
+          />
+        </TouchableOpacity>
+      )}
     </View>
   </View>
 );

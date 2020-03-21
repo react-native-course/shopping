@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { View, ScrollView, Text, TextInput, StyleSheet } from 'react-native';
 //selectors
@@ -23,7 +23,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const EditProductScreen = ({ navigation: { getParam }, userProducts }) => {
+const EditProductScreen = ({
+  navigation: { getParam, setParams },
+  userProducts
+}) => {
   const prodId = getParam('productId'),
     editedProduct = userProducts.find((prod) => prod.id === prodId),
     [title, setTitle] = useState(editedProduct ? editedProduct.title : ''),
@@ -34,6 +37,14 @@ const EditProductScreen = ({ navigation: { getParam }, userProducts }) => {
     [description, setDescription] = useState(
       editedProduct ? editedProduct.description : ''
     );
+
+  const submitHandler = useCallback(() => {
+    console.log('submitting');
+  }, []);
+
+  useEffect(() => {
+    setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   return (
     <ScrollView>

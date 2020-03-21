@@ -143,7 +143,7 @@ const AdminNavigator = createStackNavigator(
       navigationOptions: ({ navigation: { getParam } }) => ({
         title: getParam('productId') ? 'Edit Product' : 'Add Product',
         headerRight: headerButtonIcon({
-          onPressHandler: () => {},
+          onPressHandler: getParam('submit'),
           icon: 'checkmark',
           buttonTitle: 'Save'
         })

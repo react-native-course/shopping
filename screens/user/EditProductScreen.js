@@ -1,14 +1,84 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { View, ScrollView, Text, TextInput, StyleSheet } from 'react-native';
+//selectors
+import { getUserProducts } from '../../store/selectors/productsSelectors';
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  form: {
+    margin: 20
+  },
+  formControl: {
+    width: '100%'
+  },
+  label: {
+    fontFamily: 'open-sans-bold',
+    marginVertical: 8
+  },
+  input: {
+    paddingHorizontal: 2,
+    paddingVertical: 5,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1
+  }
+});
 
-const EditProductScreen = () => {
+const EditProductScreen = ({ navigation: { getParam }, userProducts }) => {
+  const prodId = getParam('productId'),
+    editedProduct = userProducts.find((prod) => prod.id === prodId),
+    [title, setTitle] = useState(editedProduct ? editedProduct.title : ''),
+    [imageUrl, setImageUrl] = useState(
+      editedProduct ? editedProduct.imageUrl : ''
+    ),
+    [price, setPrice] = useState(''),
+    [description, setDescription] = useState(
+      editedProduct ? editedProduct.description : ''
+    );
+
   return (
-    <View>
-      <Text>The edit product screen</Text>
-    </View>
+    <ScrollView>
+      <View style={styles.form}>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Image URL</Text>
+          <TextInput
+            style={styles.input}
+            value={imageUrl}
+            onChangeText={setImageUrl}
+          />
+        </View>
+        {!editedProduct && (
+          <View style={styles.formControl}>
+            <Text style={styles.label}>Price</Text>
+            <TextInput
+              style={styles.input}
+              value={price}
+              onChangeText={setPrice}
+            />
+          </View>
+        )}
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            style={styles.input}
+            value={description}
+            onChangeText={setDescription}
+          />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
-export default EditProductScreen;
+const mapStateToProps = (state) => ({
+  userProducts: getUserProducts({ state })
+});
+
+export default connect(mapStateToProps)(EditProductScreen);

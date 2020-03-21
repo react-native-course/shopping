@@ -37,17 +37,17 @@ const defaultNavOptions = {
   headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primary
 };
 
-//header side drawer button
-const headerLeftButton = (toggleDrawer) => (
+//header button icon
+const headerButtonIcon = ({ onPressHandler, icon, buttonTitle }) => (
   <HeaderButtons
     HeaderButtonComponent={CustomHeaderButton}
-    title="menu content"
+    title={`${buttonTitle} content`}
   >
     <Item
-      title="Menu"
-      label="Menu"
-      iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-      onPress={() => toggleDrawer()}
+      title={buttonTitle}
+      label={buttonTitle}
+      iconName={Platform.OS === 'android' ? `md-${icon}` : `ios-${icon}`}
+      onPress={() => onPressHandler()}
     />
   </HeaderButtons>
 );
@@ -69,20 +69,16 @@ const ProductsNavigator = createStackNavigator(
       screen: ProductsOverviewScreen,
       navigationOptions: ({ navigation: { navigate, toggleDrawer } }) => ({
         title: 'All Products',
-        headerLeft: headerLeftButton(toggleDrawer),
-        headerRight: (
-          <HeaderButtons
-            HeaderButtonComponent={CustomHeaderButton}
-            title="cart content"
-          >
-            <Item
-              title="Cart"
-              label="Cart"
-              iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-              onPress={() => navigate('Cart')}
-            />
-          </HeaderButtons>
-        )
+        headerLeft: headerButtonIcon({
+          onPressHandler: toggleDrawer,
+          icon: 'menu',
+          buttonTitle: 'Menu'
+        }),
+        headerRight: headerButtonIcon({
+          onPressHandler: () => navigate('Cart'),
+          icon: 'cart',
+          buttonTitle: 'Cart'
+        })
       })
     },
     ProductDetail: {
@@ -110,7 +106,11 @@ const ordersNavigator = createStackNavigator(
       screen: OrdersScreen,
       navigationOptions: ({ navigation: { toggleDrawer } }) => ({
         title: 'Your Orders',
-        headerLeft: headerLeftButton(toggleDrawer)
+        headerLeft: headerButtonIcon({
+          onPressHandler: toggleDrawer,
+          icon: 'menu',
+          buttonTitle: 'Menu'
+        })
       })
     }
   },
@@ -124,13 +124,30 @@ const AdminNavigator = createStackNavigator(
   {
     UserProducts: {
       screen: UserProductsScreen,
-      navigationOptions: ({ navigation: { toggleDrawer } }) => ({
+      navigationOptions: ({ navigation: { toggleDrawer, navigate } }) => ({
         title: 'Your Products',
-        headerLeft: headerLeftButton(toggleDrawer)
+        headerLeft: headerButtonIcon({
+          onPressHandler: toggleDrawer,
+          icon: 'menu',
+          buttonTitle: 'Menu'
+        }),
+        headerRight: headerButtonIcon({
+          onPressHandler: () => navigate('EditProduct'),
+          icon: 'add',
+          buttonTitle: 'Add'
+        })
       })
     },
     EditProduct: {
-      screen: EditProductScreen
+      screen: EditProductScreen,
+      navigationOptions: ({ navigation: { getParam } }) => ({
+        title: getParam('productId') ? 'Edit Product' : 'Add Product',
+        headerRight: headerButtonIcon({
+          onPressHandler: () => {},
+          icon: 'checkmark',
+          buttonTitle: 'Save'
+        })
+      })
     }
   },
   {

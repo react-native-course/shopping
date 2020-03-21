@@ -20,6 +20,7 @@ import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
+import EditProductScreen from '../screens/user/EditProductScreen';
 
 //==============helpers==============
 //default options for stack navigators
@@ -127,6 +128,9 @@ const AdminNavigator = createStackNavigator(
         title: 'Your Products',
         headerLeft: headerLeftButton(toggleDrawer)
       })
+    },
+    EditProduct: {
+      screen: EditProductScreen
     }
   },
   {

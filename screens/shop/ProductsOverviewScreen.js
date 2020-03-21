@@ -26,37 +26,42 @@ const ProductsOverviewScreen = ({
     <FlatList
       data={availableProducts}
       keyExtractor={(item) => item.id}
-      renderItem={(itemData) => (
-        <ProductItem
-          image={itemData.item.imageUrl}
-          title={itemData.item.title}
-          price={itemData.item.price}
-          onSelect={() => {
-            selectItemHandler({
-              id: itemData.item.id,
-              title: itemData.item.title
-            });
-          }}
-        >
-          <Button
-            title="View Details"
-            onPress={() => {
+      renderItem={(itemData) => {
+        const {
+          item: { id, imageUrl, title, price }
+        } = itemData;
+        return (
+          <ProductItem
+            image={imageUrl}
+            title={title}
+            price={price}
+            onSelect={() => {
               selectItemHandler({
-                id: itemData.item.id,
-                title: itemData.item.title
+                id: id,
+                title: title
               });
             }}
-            color={Colors.primary}
-          />
-          <Button
-            title="To Cart"
-            onPress={() => {
-              dispatch(addToCart(itemData.item));
-            }}
-            color={Colors.primary}
-          />
-        </ProductItem>
-      )}
+          >
+            <Button
+              title="View Details"
+              onPress={() => {
+                selectItemHandler({
+                  id: id,
+                  title: title
+                });
+              }}
+              color={Colors.primary}
+            />
+            <Button
+              title="To Cart"
+              onPress={() => {
+                dispatch(addToCart(itemData.item));
+              }}
+              color={Colors.primary}
+            />
+          </ProductItem>
+        );
+      }}
     />
   );
 };

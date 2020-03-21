@@ -14,7 +14,10 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case DELETE_PRODUCT: {
       return updateObject(state, {
-        userProducts: state.userProducts.filter((el) => el.id !== action.pid)
+        userProducts: state.userProducts.filter((el) => el.id !== action.pid),
+        availableProducts: state.availableProducts.filter(
+          (el) => el.id !== action.pid
+        )
       });
     }
     default:

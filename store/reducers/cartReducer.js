@@ -69,7 +69,7 @@ const reducer = (state = initialState, action) => {
         return state;
       }
       const updatedItems = { ...state.items },
-        itemTotal = state.item[action.pid].sum;
+        itemTotal = updatedItems[action.pid].sum;
 
       delete updatedItems[action.pid];
 

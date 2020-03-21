@@ -70,15 +70,20 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
       <FlatList
         data={transformedCartItems}
         keyExtractor={(item) => item.productId}
-        renderItem={(itemData) => (
-          <CartItem
-            quantity={itemData.item.quantity}
-            title={itemData.item.productTitle}
-            amount={itemData.item.sum}
-            deletable
-            onRemove={() => dispatch(removeFromCart(itemData.item.productId))}
-          />
-        )}
+        renderItem={(itemData) => {
+          const {
+            item: { productId, quantity, productTitle, sum }
+          } = itemData;
+          return (
+            <CartItem
+              quantity={quantity}
+              title={productTitle}
+              amount={sum}
+              deletable
+              onRemove={() => dispatch(removeFromCart(productId))}
+            />
+          );
+        }}
       />
     </View>
   );

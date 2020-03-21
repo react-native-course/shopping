@@ -1,5 +1,10 @@
 //action types
-import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ORDER } from '../actionTypes';
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  ADD_ORDER,
+  DELETE_PRODUCT
+} from '../actionTypes';
 //models
 import CartItem from '../../models/cart-item';
 //utilities
@@ -58,6 +63,20 @@ const reducer = (state = initialState, action) => {
     }
     case ADD_ORDER: {
       return initialState;
+    }
+    case DELETE_PRODUCT: {
+      if (!state.items[action.pid]) {
+        return state;
+      }
+      const updatedItems = { ...state.items },
+        itemTotal = state.item[action.pid].sum;
+
+      delete updatedItems[action.pid];
+
+      return updateObject(state, {
+        items: updatedItems,
+        totalAmount: state.totalAmount - itemTotal
+      });
     }
     default:
       return state;

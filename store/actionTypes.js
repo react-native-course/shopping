@@ -4,3 +4,6 @@ export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 
 //orders
 export const ADD_ORDER = 'ADD_ORDER';
+
+//products
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';

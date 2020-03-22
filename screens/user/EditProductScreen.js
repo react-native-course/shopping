@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 import { View, ScrollView, Text, TextInput, StyleSheet } from 'react-native';
 //selectors
 import { getUserProducts } from '../../store/selectors/productsSelectors';
+//actions
+import {
+  createProduct,
+  updateProduct
+} from '../../store/actions/productsActions';
 
 const styles = StyleSheet.create({
   form: {
@@ -25,7 +30,8 @@ const styles = StyleSheet.create({
 
 const EditProductScreen = ({
   navigation: { getParam, setParams },
-  userProducts
+  userProducts,
+  dispatch
 }) => {
   const prodId = getParam('productId'),
     editedProduct = userProducts.find((prod) => prod.id === prodId),
@@ -39,8 +45,12 @@ const EditProductScreen = ({
     );
 
   const submitHandler = useCallback(() => {
-    console.log('submitting');
-  }, []);
+    if (editedProduct) {
+      dispatch(updateProduct({ id: prodId, title, description, imageUrl }));
+    } else {
+      dispatch(createProduct({ title, description, imageUrl, price }));
+    }
+  }, [prodId, title, description, imageUrl, price]);
 
   useEffect(() => {
     setParams({ submit: submitHandler });

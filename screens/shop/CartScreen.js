@@ -13,6 +13,7 @@ import { addOrder } from '../../store/actions/ordersActions';
 import Colors from '../../constants/Colors';
 //components
 import CartItem from '../../components/shop/CartItem';
+import Card from '../../components/UI/Card';
 
 const styles = StyleSheet.create({
   screen: {
@@ -23,14 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: '#fff'
+    padding: 10
   },
   summaryText: {
     fontFamily: 'open-sans-bold',
@@ -54,7 +48,7 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
   }
   return (
     <View style={styles.screen}>
-      <View style={styles.summary}>
+      <Card style={styles.summary}>
         <Text style={styles.summaryText}>
           Total:{' '}
           <Text style={styles.amount}>
@@ -69,7 +63,7 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
             dispatch(addOrder({ cartItems: transformedCartItems, totalAmount }))
           }
         />
-      </View>
+      </Card>
       <FlatList
         data={transformedCartItems}
         keyExtractor={(item) => item.productId}

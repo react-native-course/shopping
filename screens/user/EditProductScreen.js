@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 const EditProductScreen = ({
-  navigation: { getParam, setParams },
+  navigation: { goBack, getParam, setParams },
   userProducts,
   dispatch
 }) => {
@@ -50,6 +50,7 @@ const EditProductScreen = ({
     } else {
       dispatch(createProduct({ title, description, imageUrl, price }));
     }
+    goBack();
   }, [prodId, title, description, imageUrl, price]);
 
   useEffect(() => {

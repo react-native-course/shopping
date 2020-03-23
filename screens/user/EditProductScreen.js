@@ -93,7 +93,7 @@ const EditProductScreen = ({
       );
     }
     goBack();
-  }, [prodId, formState]);
+  }, [dispatch, prodId, formState]);
 
   useEffect(() => {
     setParams({ submit: submitHandler });

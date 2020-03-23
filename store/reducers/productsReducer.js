@@ -6,7 +6,6 @@ import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../actionTypes';
 import { updateObject } from '../utility';
 //models
 import Product from '../../models/product';
-import { updateProduct } from '../actions/productsActions';
 
 const initialState = {
   availableProducts: PRODUCTS,

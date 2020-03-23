@@ -5,7 +5,9 @@ import {
   SET_PRODUCTS,
   DELETE_PRODUCT,
   CREATE_PRODUCT,
-  UPDATE_PRODUCT
+  UPDATE_PRODUCT,
+  SET_PRODUCTS_ERROR_MESSAGE,
+  RESET_PRODUCTS_ERROR_MESSAGE
 } from '../actionTypes';
 //utilities
 import { updateObject } from '../utility';
@@ -14,7 +16,8 @@ import Product from '../../models/product';
 
 const initialState = {
   availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1')
+  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
+  errorMessage: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -68,6 +71,12 @@ const reducer = (state = initialState, action) => {
         userProducts: updatedUserProducts,
         availableProducts: updatedAvailableProducts
       });
+    }
+    case SET_PRODUCTS_ERROR_MESSAGE: {
+      return updateObject(state, { errorMessage: action.error });
+    }
+    case RESET_PRODUCTS_ERROR_MESSAGE: {
+      return updateObject(state, { errorMessage: '' });
     }
     default:
       return state;

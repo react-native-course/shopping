@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { FlatList, Button } from 'react-native';
 //selectors
 import { getAvailableProducts } from '../../store/selectors/productsSelectors';
 //actions
 import { addToCart } from '../../store/actions/cartActions';
+import { fetchProducts } from '../../store/actions/productsActions';
 //constants
 import Colors from '../../constants/Colors';
 //components
@@ -15,6 +16,10 @@ const ProductsOverviewScreen = ({
   navigation: { navigate },
   dispatch
 }) => {
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   const selectItemHandler = ({ id, title }) => {
     navigate('ProductDetail', {
       productId: id,

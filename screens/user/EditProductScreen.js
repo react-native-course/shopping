@@ -94,7 +94,7 @@ const EditProductScreen = ({
           title: formState.inputValues.title,
           description: formState.inputValues.description,
           imageUrl: formState.inputValues.imageUrl,
-          price: formState.inputValues.price
+          price: +formState.inputValues.price
         })
       );
     }

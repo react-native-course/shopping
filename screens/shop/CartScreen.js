@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  Alert,
+  ActivityIndicator,
+  StyleSheet
+} from 'react-native';
 //selectors
 import {
   getCartItems,
   getCartTotalAmount
 } from '../../store/selectors/cartSelectors';
+import { getOrdersErrorMessage } from '../../store/selectors/ordersSelectors';
 //actions
 import { removeFromCart } from '../../store/actions/cartActions';
-import { addOrder } from '../../store/actions/ordersActions';
+import {
+  addOrder,
+  resetOrdersErrorMessage
+} from '../../store/actions/ordersActions';
 //constants
 import Colors from '../../constants/Colors';
 //components
@@ -35,7 +47,19 @@ const styles = StyleSheet.create({
   }
 });
 
-const CartScreen = ({ items, totalAmount, dispatch }) => {
+const CartScreen = ({ items, totalAmount, errorMessage, dispatch }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  //show alert if error
+  useEffect(() => {
+    if (errorMessage) {
+      Alert.alert('An error has occured', errorMessage, [{ text: 'Okay' }]);
+    }
+    return () => {
+      dispatch(resetOrdersErrorMessage());
+    };
+  }, [errorMessage]);
+
   const transformedCartItems = [];
   //loop through items object and return an array of items
   for (const key in items) {
@@ -47,6 +71,21 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
       sum: items[key].sum
     });
   }
+
+  //add order
+  const sendOrderHandler = async () => {
+    dispatch(resetOrdersErrorMessage());
+    setIsLoading(true);
+    try {
+      await dispatch(
+        addOrder({ cartItems: transformedCartItems, totalAmount })
+      );
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -56,14 +95,16 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
             ${Math.round(totalAmount.toFixed(2) * 100) / 100}
           </Text>
         </Text>
-        <Button
-          color={Colors.accent}
-          title="Order Now"
-          disabled={transformedCartItems.length === 0}
-          onPress={() =>
-            dispatch(addOrder({ cartItems: transformedCartItems, totalAmount }))
-          }
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color={Colors.primary} />
+        ) : (
+          <Button
+            color={Colors.accent}
+            title="Order Now"
+            disabled={transformedCartItems.length === 0}
+            onPress={sendOrderHandler}
+          />
+        )}
       </Card>
       <FlatList
         data={transformedCartItems}
@@ -89,7 +130,8 @@ const CartScreen = ({ items, totalAmount, dispatch }) => {
 
 const mapStateToProps = (state) => ({
   items: getCartItems({ state }),
-  totalAmount: getCartTotalAmount({ state })
+  totalAmount: getCartTotalAmount({ state }),
+  errorMessage: getOrdersErrorMessage({ state })
 });
 
 export default connect(mapStateToProps)(CartScreen);

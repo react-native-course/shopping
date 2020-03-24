@@ -77,11 +77,7 @@ const ProductsOverviewScreen = ({
 
   //if http reqest is running show a spinner
   if (isLoading) {
-    return (
-      <CenteredWrapper>
-        <LoadingIcon />
-      </CenteredWrapper>
-    );
+    return <LoadingIcon />;
   }
 
   //if no products show a message

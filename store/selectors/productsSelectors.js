@@ -6,3 +6,6 @@ export const getUserProducts = ({ state }) =>
 
 export const getProductsErrorMessage = ({ state }) =>
   state.productsReducer.errorMessage;
+
+export const getAdminErrorMessage = ({ state }) =>
+  state.productsReducer.adminErrorMessage;

@@ -7,7 +7,9 @@ import {
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
   SET_PRODUCTS_ERROR_MESSAGE,
-  RESET_PRODUCTS_ERROR_MESSAGE
+  RESET_PRODUCTS_ERROR_MESSAGE,
+  SET_ADMIN_ERROR_MESSAGE,
+  RESET_ADMIN_ERROR_MESSAGE
 } from '../actionTypes';
 //utilities
 import { updateObject } from '../utility';
@@ -17,7 +19,8 @@ import Product from '../../models/product';
 const initialState = {
   availableProducts: PRODUCTS,
   userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
-  errorMessage: ''
+  errorMessage: '',
+  adminErrorMessage: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -77,6 +80,14 @@ const reducer = (state = initialState, action) => {
     }
     case RESET_PRODUCTS_ERROR_MESSAGE: {
       return updateObject(state, { errorMessage: '' });
+    }
+    case SET_ADMIN_ERROR_MESSAGE: {
+      return updateObject(state, { adminErrorMessage: action.error });
+    }
+    case RESET_ADMIN_ERROR_MESSAGE: {
+      return updateObject(state, {
+        adminErrorMessage: initialState.adminErrorMessage
+      });
     }
     default:
       return state;

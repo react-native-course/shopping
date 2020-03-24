@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
@@ -8,14 +8,19 @@ import {
   StyleSheet
 } from 'react-native';
 //selectors
-import { getUserProducts } from '../../store/selectors/productsSelectors';
+import {
+  getUserProducts,
+  getAdminErrorMessage
+} from '../../store/selectors/productsSelectors';
 //actions
 import {
   createProduct,
-  updateProduct
+  updateProduct,
+  resetAdminErrorMessage
 } from '../../store/actions/productsActions';
 //components
 import Input from '../../components/UI/Input';
+import LoadingIcon from '../../components/UI/LoadingIcon';
 
 const styles = StyleSheet.create({
   form: {
@@ -53,8 +58,11 @@ const formReducer = (state, action) => {
 const EditProductScreen = ({
   navigation: { goBack, getParam, setParams },
   userProducts,
+  adminErrorMessage,
   dispatch
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const prodId = getParam('productId'),
     editedProduct = userProducts.find((prod) => prod.id === prodId);
 
@@ -75,8 +83,20 @@ const EditProductScreen = ({
     formIsValid: editedProduct ? true : false
   });
 
+  //show alert if error
+  useEffect(() => {
+    if (adminErrorMessage) {
+      Alert.alert('An error has occured', adminErrorMessage, [
+        { text: 'Okay' }
+      ]);
+    }
+    return () => {
+      dispatch(resetAdminErrorMessage());
+    };
+  }, [adminErrorMessage]);
+
   //on submit
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     //show alert message if the form is not valid
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
@@ -84,29 +104,36 @@ const EditProductScreen = ({
       ]);
       return;
     }
-    //if there is a product => dispatch update product action
-    if (editedProduct) {
-      dispatch(
-        updateProduct({
-          id: prodId,
-          title: formState.inputValues.title,
-          description: formState.inputValues.description,
-          imageUrl: formState.inputValues.imageUrl
-        })
-      );
+    dispatch(resetAdminErrorMessage());
+    setIsLoading(true);
+    try {
+      //if there is a product => dispatch update product action
+      if (editedProduct) {
+        await dispatch(
+          updateProduct({
+            id: prodId,
+            title: formState.inputValues.title,
+            description: formState.inputValues.description,
+            imageUrl: formState.inputValues.imageUrl
+          })
+        );
+      }
+      //else dispatch create product action
+      else {
+        await dispatch(
+          createProduct({
+            title: formState.inputValues.title,
+            description: formState.inputValues.description,
+            imageUrl: formState.inputValues.imageUrl,
+            price: +formState.inputValues.price
+          })
+        );
+      }
+      setIsLoading(false);
+      goBack();
+    } catch (err) {
+      setIsLoading(false);
     }
-    //else dispatch create product action
-    else {
-      dispatch(
-        createProduct({
-          title: formState.inputValues.title,
-          description: formState.inputValues.description,
-          imageUrl: formState.inputValues.imageUrl,
-          price: +formState.inputValues.price
-        })
-      );
-    }
-    goBack();
   }, [dispatch, prodId, formState]);
 
   //pass the submit method to the navigation
@@ -126,6 +153,11 @@ const EditProductScreen = ({
     },
     [dispatchFormState]
   );
+
+  //show loading icon if loading
+  if (isLoading) {
+    return <LoadingIcon />;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -193,7 +225,8 @@ const EditProductScreen = ({
 };
 
 const mapStateToProps = (state) => ({
-  userProducts: getUserProducts({ state })
+  userProducts: getUserProducts({ state }),
+  adminErrorMessage: getAdminErrorMessage({ state })
 });
 
 export default connect(mapStateToProps)(EditProductScreen);

@@ -17,7 +17,7 @@ const requestInterceptorError = (error) => {
 };
 
 const responseInterceptor = (response) => {
-  console.log('response interceptor', response);
+  // console.log('response interceptor', response);
   return response;
 };
 

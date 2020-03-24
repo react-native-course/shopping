@@ -5,7 +5,9 @@ import {
   UPDATE_PRODUCT,
   SET_PRODUCTS,
   SET_PRODUCTS_ERROR_MESSAGE,
-  RESET_PRODUCTS_ERROR_MESSAGE
+  RESET_PRODUCTS_ERROR_MESSAGE,
+  SET_ADMIN_ERROR_MESSAGE,
+  RESET_ADMIN_ERROR_MESSAGE
 } from '../actionTypes';
 //services
 import ProductsService from '../../services/ProductsService';
@@ -21,14 +23,20 @@ export const resetProductsErrorMessage = () => ({
   type: RESET_PRODUCTS_ERROR_MESSAGE
 });
 
+const setAdminErrorMessage = (error) => ({
+  type: SET_ADMIN_ERROR_MESSAGE,
+  error
+});
+
+export const resetAdminErrorMessage = () => ({
+  type: RESET_ADMIN_ERROR_MESSAGE
+});
+
 export const fetchProducts = () => async (dispatch) => {
   try {
     const res = await ProductsService.getProducts(),
       loadedProducts = [];
 
-    if (res.status !== 200) {
-      dispatch(setProductsErrorMessage('Something went wrong!'));
-    }
     for (const [key, value] of Object.entries(res.data)) {
       loadedProducts.push(
         new Product(
@@ -72,34 +80,45 @@ export const createProduct = ({
       }
     });
   } catch (err) {
-    console.log(err.response);
+    dispatch(setAdminErrorMessage(err.response.data));
+    throw new Error(err.response.data);
   }
 };
 
 export const updateProduct = ({ id, title, description, imageUrl }) => async (
   dispatch
 ) => {
-  await ProductsService.updateProduct({
-    id,
-    title,
-    description,
-    imageUrl
-  });
-  dispatch({
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
+  try {
+    await ProductsService.updateProduct({
+      id,
       title,
       description,
       imageUrl
-    }
-  });
+    });
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        description,
+        imageUrl
+      }
+    });
+  } catch (err) {
+    dispatch(setAdminErrorMessage(err.response.data));
+    throw new Error(err.response.data);
+  }
 };
 
 export const deleteProduct = (productId) => async (dispatch) => {
-  await ProductsService.deleteProduct(productId);
-  dispatch({
-    type: DELETE_PRODUCT,
-    pid: productId
-  });
+  try {
+    await ProductsService.deleteProduct(productId);
+    dispatch({
+      type: DELETE_PRODUCT,
+      pid: productId
+    });
+  } catch (err) {
+    dispatch(setAdminErrorMessage(err.response.data));
+  }
 };

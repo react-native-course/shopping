@@ -1,9 +1,11 @@
 import React, { useReducer, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
+//action types for inputReducer
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
 
+//reducer for input
 const inputReducer = (state, action) => {
   switch (action.type) {
     case INPUT_CHANGE:
@@ -31,10 +33,12 @@ const Input = (props) => {
 
   const { onInputChange, id } = props;
 
+  //send the required data to the parent on input change
   useEffect(() => {
     onInputChange(id, inputState.value, inputState.isValid);
   }, [inputState, onInputChange, id]);
 
+  //set input properties
   const textChangeHandler = (text) => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
@@ -56,6 +60,7 @@ const Input = (props) => {
     dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
   };
 
+  //set touched to true on blur
   const lostFocusHandler = () => {
     dispatch({ type: INPUT_BLUR });
   };

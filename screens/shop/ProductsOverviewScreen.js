@@ -35,11 +35,12 @@ const styles = StyleSheet.create({
 const ProductsOverviewScreen = ({
   availableProducts,
   errorMessage,
-  navigation: { navigate },
+  navigation: { navigate, addListener },
   dispatch
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
+  //fetch products from the backend
   const loadProducts = useCallback(async () => {
     dispatch(resetProductsErrorMessage());
     setIsLoading(true);
@@ -51,10 +52,21 @@ const ProductsOverviewScreen = ({
     }
   }, [setIsLoading]);
 
+  //add event listener on navigation
+  useEffect(() => {
+    const willFocusSub = addListener('willFocus', loadProducts);
+
+    return () => {
+      willFocusSub.remove();
+    };
+  }, [loadProducts]);
+
+  //fetch products component did mount
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
 
+  //select a product to read the details
   const selectItemHandler = ({ id, title }) => {
     navigate('ProductDetail', {
       productId: id,
@@ -62,6 +74,7 @@ const ProductsOverviewScreen = ({
     });
   };
 
+  //if there is an HTTP request error show the error
   if (errorMessage) {
     return (
       <View style={styles.centered}>
@@ -75,6 +88,7 @@ const ProductsOverviewScreen = ({
     );
   }
 
+  //if http reqest is running show a spinner
   if (isLoading) {
     return (
       <View style={styles.centered}>
@@ -83,6 +97,7 @@ const ProductsOverviewScreen = ({
     );
   }
 
+  //if no products show a message
   if (!isLoading && availableProducts.length === 0) {
     return (
       <View style={styles.centered}>

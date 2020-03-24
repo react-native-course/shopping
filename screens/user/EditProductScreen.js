@@ -23,8 +23,10 @@ const styles = StyleSheet.create({
   }
 });
 
+//action type for formReducer
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
+//formReducer for product inputs
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
@@ -56,6 +58,7 @@ const EditProductScreen = ({
   const prodId = getParam('productId'),
     editedProduct = userProducts.find((prod) => prod.id === prodId);
 
+  //form state
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : '',
@@ -72,13 +75,16 @@ const EditProductScreen = ({
     formIsValid: editedProduct ? true : false
   });
 
+  //on submit
   const submitHandler = useCallback(() => {
+    //show alert message if the form is not valid
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
         { text: 'Okay' }
       ]);
       return;
     }
+    //if there is a product => dispatch update product action
     if (editedProduct) {
       dispatch(
         updateProduct({
@@ -88,7 +94,9 @@ const EditProductScreen = ({
           imageUrl: formState.inputValues.imageUrl
         })
       );
-    } else {
+    }
+    //else dispatch create product action
+    else {
       dispatch(
         createProduct({
           title: formState.inputValues.title,
@@ -101,10 +109,12 @@ const EditProductScreen = ({
     goBack();
   }, [dispatch, prodId, formState]);
 
+  //pass the submit method to the navigation
   useEffect(() => {
     setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  //change handler for form inputs
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({

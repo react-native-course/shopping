@@ -15,6 +15,7 @@ const UserProductsScreen = ({
   dispatch,
   navigation: { navigate }
 }) => {
+  //navigate to edit screen to edit a product
   const editProductHandler = (id) => {
     navigate('EditProduct', { productId: id });
   };

@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 
 const CartScreen = ({ items, totalAmount, dispatch }) => {
   const transformedCartItems = [];
+  //loop through items object and return an array of items
   for (const key in items) {
     transformedCartItems.push({
       productId: key,

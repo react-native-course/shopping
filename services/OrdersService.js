@@ -1,12 +1,18 @@
 import { apiService } from './HttpService';
 //constants
-import { getCreateOrderUrl } from '../constants/ApiUrls';
+import { getOrdersUrl } from '../constants/ApiUrls';
 
 class OrdersService {
+  static getOrders(userId) {
+    return apiService({
+      method: 'GET',
+      url: getOrdersUrl(userId)
+    });
+  }
   static createOrder({ userId, cartItems, totalAmount, date }) {
     return apiService({
       method: 'POST',
-      url: getCreateOrderUrl(userId),
+      url: getOrdersUrl(userId),
       data: { cartItems, totalAmount, date }
     });
   }

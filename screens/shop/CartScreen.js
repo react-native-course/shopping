@@ -74,7 +74,9 @@ const CartScreen = ({ items, totalAmount, errorMessage, dispatch }) => {
 
   //add order
   const sendOrderHandler = async () => {
-    dispatch(resetOrdersErrorMessage());
+    if (errorMessage) {
+      dispatch(resetOrdersErrorMessage());
+    }
     setIsLoading(true);
     try {
       await dispatch(

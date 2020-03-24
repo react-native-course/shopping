@@ -29,7 +29,9 @@ const ProductsOverviewScreen = ({
 
   //fetch products from the backend
   const loadProducts = useCallback(async () => {
-    dispatch(resetProductsErrorMessage());
+    if (errorMessage) {
+      dispatch(resetProductsErrorMessage());
+    }
     setIsLoading(true);
     try {
       await dispatch(fetchProducts());

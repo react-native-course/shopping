@@ -49,7 +49,9 @@ const UserProductsScreen = ({
         text: 'Yes',
         style: 'destructive',
         onPress: async () => {
-          dispatch(resetAdminErrorMessage());
+          if (adminErrorMessage) {
+            dispatch(resetAdminErrorMessage());
+          }
           setIsLoading(true);
           try {
             await dispatch(deleteProduct(id));

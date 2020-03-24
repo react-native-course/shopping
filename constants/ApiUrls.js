@@ -10,6 +10,5 @@ export const getProductUrl = (id) => `${BASE_URL}${PRODUCTS_URL}/${id}.json`;
 
 //orders
 const ORDERS_URL = '/orders';
-export const getOrdersUrl = () => `${BASE_URL}${ORDERS_URL}.json`;
-export const getCreateOrderUrl = (userId) =>
+export const getOrdersUrl = (userId) =>
   `${BASE_URL}${ORDERS_URL}/${userId}.json`;

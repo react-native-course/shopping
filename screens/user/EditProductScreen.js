@@ -104,7 +104,9 @@ const EditProductScreen = ({
       ]);
       return;
     }
-    dispatch(resetAdminErrorMessage());
+    if (adminErrorMessage) {
+      dispatch(resetAdminErrorMessage());
+    }
     setIsLoading(true);
     try {
       //if there is a product => dispatch update product action

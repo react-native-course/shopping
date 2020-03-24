@@ -1,4 +1,5 @@
 import {
+  SET_ORDERS,
   ADD_ORDER,
   SET_ORDERS_ERROR_MESSAGE,
   RESET_ORDERS_ERROR_MESSAGE
@@ -15,6 +16,9 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_ORDERS: {
+      return updateObject(state, { orders: action.orders });
+    }
     case ADD_ORDER: {
       const {
         orderData: { id, items, amount, date }

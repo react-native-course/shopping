@@ -1,9 +1,14 @@
+//action types
 import {
+  SET_ORDERS,
   ADD_ORDER,
   SET_ORDERS_ERROR_MESSAGE,
   RESET_ORDERS_ERROR_MESSAGE
 } from '../actionTypes';
+//services
 import OrdersService from '../../services/OrdersService';
+//models
+import Order from '../../models/order';
 
 const setOrdersErrorMessage = (error) => ({
   type: SET_ORDERS_ERROR_MESSAGE,
@@ -13,6 +18,22 @@ const setOrdersErrorMessage = (error) => ({
 export const resetOrdersErrorMessage = () => ({
   type: RESET_ORDERS_ERROR_MESSAGE
 });
+
+export const fetchOrders = () => async (dispatch) => {
+  try {
+    const res = await OrdersService.getOrders('u1'),
+      loadedOrders = [];
+
+    for (const [key, value] of Object.entries(res.data)) {
+      loadedOrders.push(
+        new Order(key, value.cartItems, value.totalAmount, new Date(value.date))
+      );
+    }
+    dispatch({ type: SET_ORDERS, orders: loadedOrders });
+  } catch (err) {
+    dispatch(setOrdersErrorMessage(err.response.data));
+  }
+};
 
 export const addOrder = ({ cartItems, totalAmount }) => async (dispatch) => {
   try {
@@ -34,6 +55,5 @@ export const addOrder = ({ cartItems, totalAmount }) => async (dispatch) => {
     });
   } catch (err) {
     dispatch(setOrdersErrorMessage(err.response.data));
-    throw new Error(err.response.data);
   }
 };

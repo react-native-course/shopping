@@ -81,12 +81,22 @@ export const createProduct = ({
   }
 };
 
-export const updateProduct = ({ id, title, description, imageUrl }) => ({
-  type: UPDATE_PRODUCT,
-  pid: id,
-  productData: {
+export const updateProduct = ({ id, title, description, imageUrl }) => async (
+  dispatch
+) => {
+  await ProductsService.updateProduct({
+    id,
     title,
     description,
     imageUrl
-  }
-});
+  });
+  dispatch({
+    type: UPDATE_PRODUCT,
+    pid: id,
+    productData: {
+      title,
+      description,
+      imageUrl
+    }
+  });
+};

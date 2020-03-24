@@ -1,6 +1,6 @@
 import { apiService } from './HttpService';
 //constants
-import { getProductsUrl } from '../constants/ApiUrls';
+import { getProductsUrl, getUpdateProductUrl } from '../constants/ApiUrls';
 
 class ProductsService {
   static getProducts() {
@@ -18,6 +18,17 @@ class ProductsService {
         description,
         imageUrl,
         price
+      }
+    });
+  }
+  static updateProduct({ id, title, description, imageUrl }) {
+    return apiService({
+      method: 'PATCH',
+      url: getUpdateProductUrl(id),
+      data: {
+        title,
+        description,
+        imageUrl
       }
     });
   }

@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-import {
-  View,
-  Text,
-  FlatList,
-  Button,
-  ActivityIndicator,
-  StyleSheet
-} from 'react-native';
+import { View, Text, FlatList, Button, ActivityIndicator } from 'react-native';
 //selectors
 import {
   getAvailableProducts,
@@ -23,14 +16,8 @@ import {
 import Colors from '../../constants/Colors';
 //components
 import ProductItem from '../../components/shop/ProductItem';
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-});
+import CenteredWrapper from '../../components/UI/CenteredWrapper';
+import LoadingIcon from '../../components/UI/LoadingIcon';
 
 const ProductsOverviewScreen = ({
   availableProducts,
@@ -77,32 +64,32 @@ const ProductsOverviewScreen = ({
   //if there is an HTTP request error show the error
   if (errorMessage) {
     return (
-      <View style={styles.centered}>
+      <CenteredWrapper>
         <Text>{errorMessage}!</Text>
         <Button
           title="Try again"
           onPress={loadProducts}
           color={Colors.primary}
         />
-      </View>
+      </CenteredWrapper>
     );
   }
 
   //if http reqest is running show a spinner
   if (isLoading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
+      <CenteredWrapper>
+        <LoadingIcon />
+      </CenteredWrapper>
     );
   }
 
   //if no products show a message
   if (!isLoading && availableProducts.length === 0) {
     return (
-      <View style={styles.centered}>
+      <CenteredWrapper>
         <Text>No products found, Maybe start adding some!</Text>
-      </View>
+      </CenteredWrapper>
     );
   }
   return (

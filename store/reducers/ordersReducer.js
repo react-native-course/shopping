@@ -12,14 +12,9 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_ORDER: {
       const {
-        orderData: { items, amount }
+        orderData: { id, items, amount, date }
       } = action;
-      const newOrder = new Order(
-        new Date().toString(),
-        items,
-        amount,
-        new Date()
-      );
+      const newOrder = new Order(id, items, amount, date);
       return updateObject(state, { orders: state.orders.concat(newOrder) });
     }
     default:

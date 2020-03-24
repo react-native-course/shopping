@@ -47,11 +47,6 @@ export const fetchProducts = () => async (dispatch) => {
   }
 };
 
-export const deleteProduct = (productId) => ({
-  type: DELETE_PRODUCT,
-  pid: productId
-});
-
 export const createProduct = ({
   title,
   description,
@@ -98,5 +93,13 @@ export const updateProduct = ({ id, title, description, imageUrl }) => async (
       description,
       imageUrl
     }
+  });
+};
+
+export const deleteProduct = (productId) => async (dispatch) => {
+  await ProductsService.deleteProduct(productId);
+  dispatch({
+    type: DELETE_PRODUCT,
+    pid: productId
   });
 };

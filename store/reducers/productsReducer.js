@@ -28,14 +28,6 @@ const reducer = (state = initialState, action) => {
         userProducts: action.products.filter((prod) => prod.ownerId === 'u1')
       });
     }
-    case DELETE_PRODUCT: {
-      return updateObject(state, {
-        userProducts: state.userProducts.filter((el) => el.id !== action.pid),
-        availableProducts: state.availableProducts.filter(
-          (el) => el.id !== action.pid
-        )
-      });
-    }
     case CREATE_PRODUCT: {
       const {
           productData: { id, title, imageUrl, description, price }
@@ -70,6 +62,14 @@ const reducer = (state = initialState, action) => {
       return updateObject(state, {
         userProducts: updatedUserProducts,
         availableProducts: updatedAvailableProducts
+      });
+    }
+    case DELETE_PRODUCT: {
+      return updateObject(state, {
+        userProducts: state.userProducts.filter((el) => el.id !== action.pid),
+        availableProducts: state.availableProducts.filter(
+          (el) => el.id !== action.pid
+        )
       });
     }
     case SET_PRODUCTS_ERROR_MESSAGE: {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, FlatList, Button, ActivityIndicator } from 'react-native';
+import { Text, FlatList, Button } from 'react-native';
 //selectors
 import {
   getAvailableProducts,
@@ -25,19 +25,20 @@ const ProductsOverviewScreen = ({
   navigation: { navigate, addListener },
   dispatch
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false),
+    [isRefreshing, setIsRefreshing] = useState(false);
 
   //fetch products from the backend
   const loadProducts = useCallback(async () => {
     if (errorMessage) {
       dispatch(resetProductsErrorMessage());
     }
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchProducts());
-      setIsLoading(false);
+      setIsRefreshing(false);
     } catch (err) {
-      setIsLoading(false);
+      setIsRefreshing(false);
     }
   }, [setIsLoading]);
 
@@ -52,7 +53,10 @@ const ProductsOverviewScreen = ({
 
   //fetch products component did mount
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts()
+      .then((res) => setIsLoading(false))
+      .catch((err) => setIsLoading(false));
   }, [loadProducts]);
 
   //select a product to read the details
@@ -92,6 +96,8 @@ const ProductsOverviewScreen = ({
   }
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={availableProducts}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => {

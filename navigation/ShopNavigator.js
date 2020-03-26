@@ -1,5 +1,3 @@
-//react navigation
-import { createAppContainer } from 'react-navigation';
 //drawer navigator
 import { createDrawerNavigator } from 'react-navigation-drawer';
 //constants
@@ -8,11 +6,11 @@ import Colors from '../constants/Colors';
 import { setDrawerIcon } from './Helpers';
 //navigators
 import { ProductsNavigator } from './ProductsNavigator';
-import { ordersNavigator } from './OrdersNavigator';
+import { OrdersNavigator } from './OrdersNavigator';
 import { AdminNavigator } from './AdminNavigator';
 
 //drawer navigator
-const shopNavigator = createDrawerNavigator(
+export const ShopNavigator = createDrawerNavigator(
   {
     Products: {
       screen: ProductsNavigator,
@@ -22,7 +20,7 @@ const shopNavigator = createDrawerNavigator(
       }
     },
     Orders: {
-      screen: ordersNavigator,
+      screen: OrdersNavigator,
       navigationOptions: {
         drawerIcon: (drawerConfig) =>
           setDrawerIcon({ drawerConfig, iconName: 'list' })
@@ -42,5 +40,3 @@ const shopNavigator = createDrawerNavigator(
     }
   }
 );
-
-export default createAppContainer(shopNavigator);

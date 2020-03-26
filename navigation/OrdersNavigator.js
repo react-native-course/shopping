@@ -2,10 +2,10 @@
 import { createStackNavigator } from 'react-navigation-stack';
 //helpers
 import { defaultNavOptions, headerButtonIcon } from './Helpers';
-//components
+//screens
 import OrdersScreen from '../screens/shop/OrdersScreen';
 
-export const ordersNavigator = createStackNavigator(
+export const OrdersNavigator = createStackNavigator(
   {
     orders: {
       screen: OrdersScreen,

@@ -2,7 +2,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
 //helpers
 import { defaultNavOptions, headerButtonIcon } from './Helpers';
-//components
+//screens
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';

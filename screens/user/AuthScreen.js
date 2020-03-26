@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
@@ -10,7 +10,7 @@ import {
 //linear gradient
 import { LinearGradient } from 'expo-linear-gradient';
 //actions
-import { signup } from '../../store/actions/authActions';
+import { signup, signin } from '../../store/actions/authActions';
 //components
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
@@ -64,6 +64,7 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = ({ dispatch }) => {
+  const [isSignup, setIsSignup] = useState(false);
   //form state
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -90,13 +91,22 @@ const AuthScreen = ({ dispatch }) => {
     [dispatchFormState]
   );
 
-  const signupHandler = () => {
-    dispatch(
-      signup({
-        email: formState.inputValues.email,
-        password: formState.inputValues.password
-      })
-    );
+  const authHandler = () => {
+    if (isSignup) {
+      dispatch(
+        signup({
+          email: formState.inputValues.email,
+          password: formState.inputValues.password
+        })
+      );
+    } else {
+      dispatch(
+        signin({
+          email: formState.inputValues.email,
+          password: formState.inputValues.password
+        })
+      );
+    }
   };
 
   return (
@@ -133,16 +143,18 @@ const AuthScreen = ({ dispatch }) => {
             />
             <View style={styles.buttonContainer}>
               <Button
-                title="Login"
+                title={`Sign ${isSignup ? 'Up' : 'In'}`}
                 color={Colors.primary}
-                onPress={signupHandler}
+                onPress={authHandler}
               />
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                title="Switch to Sign Up"
+                title={`Switch to Sign ${!isSignup ? 'Up' : 'In'}`}
                 color={Colors.accent}
-                onPress={() => {}}
+                onPress={() => {
+                  setIsSignup((prevState) => !prevState);
+                }}
               />
             </View>
           </ScrollView>

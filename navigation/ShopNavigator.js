@@ -10,33 +10,12 @@ import Colors from '../constants/Colors';
 import { defaultNavOptions, headerButtonIcon, setDrawerIcon } from './Helpers';
 //navigators
 import { ProductsNavigator } from './ProductsNavigator';
+import { ordersNavigator } from './OrdersNavigator';
 //components
-import OrdersScreen from '../screens/shop/OrdersScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 
 //==============navigators==============
-
-//orders stack navigator
-const ordersNavigator = createStackNavigator(
-  {
-    orders: {
-      screen: OrdersScreen,
-      navigationOptions: ({ navigation: { toggleDrawer } }) => ({
-        title: 'Your Orders',
-        headerLeft: headerButtonIcon({
-          onPressHandler: toggleDrawer,
-          icon: 'menu',
-          buttonTitle: 'Menu'
-        })
-      })
-    }
-  },
-  {
-    defaultNavigationOptions: defaultNavOptions
-  }
-);
-
 //admin stack navigator
 const AdminNavigator = createStackNavigator(
   {

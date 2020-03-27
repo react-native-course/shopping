@@ -1,16 +1,24 @@
-import React, { useReducer, useCallback, useState } from 'react';
+import React, { useReducer, useCallback, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
   ScrollView,
   KeyboardAvoidingView,
   Button,
+  ActivityIndicator,
+  Alert,
   StyleSheet
 } from 'react-native';
 //linear gradient
 import { LinearGradient } from 'expo-linear-gradient';
+//selectors
+import { getAuthErrorMessage } from '../../store/selectors/authSelectors';
 //actions
-import { signup, signin } from '../../store/actions/authActions';
+import {
+  signup,
+  signin,
+  resetAuthErrorMessage
+} from '../../store/actions/authActions';
 //components
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
@@ -63,8 +71,9 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = ({ dispatch }) => {
-  const [isSignup, setIsSignup] = useState(false);
+const AuthScreen = ({ errorMessage, dispatch }) => {
+  const [isSignup, setIsSignup] = useState(false),
+    [isLoading, setIsLoading] = useState(false);
   //form state
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -91,21 +100,36 @@ const AuthScreen = ({ dispatch }) => {
     [dispatchFormState]
   );
 
-  const authHandler = () => {
-    if (isSignup) {
-      dispatch(
-        signup({
-          email: formState.inputValues.email,
-          password: formState.inputValues.password
-        })
-      );
-    } else {
-      dispatch(
-        signin({
-          email: formState.inputValues.email,
-          password: formState.inputValues.password
-        })
-      );
+  useEffect(() => {
+    if (errorMessage) {
+      Alert.alert('An Error Occurred!', errorMessage, [{ text: 'Okay' }]);
+    }
+  }, [errorMessage]);
+
+  const authHandler = async () => {
+    if (errorMessage) {
+      dispatch(resetAuthErrorMessage());
+    }
+    setIsLoading(true);
+    try {
+      if (isSignup) {
+        await dispatch(
+          signup({
+            email: formState.inputValues.email,
+            password: formState.inputValues.password
+          })
+        );
+      } else {
+        await dispatch(
+          signin({
+            email: formState.inputValues.email,
+            password: formState.inputValues.password
+          })
+        );
+      }
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
     }
   };
 
@@ -142,11 +166,15 @@ const AuthScreen = ({ dispatch }) => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button
-                title={`Sign ${isSignup ? 'Up' : 'In'}`}
-                color={Colors.primary}
-                onPress={authHandler}
-              />
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Button
+                  title={`Sign ${isSignup ? 'Up' : 'In'}`}
+                  color={Colors.primary}
+                  onPress={authHandler}
+                />
+              )}
             </View>
             <View style={styles.buttonContainer}>
               <Button
@@ -164,6 +192,8 @@ const AuthScreen = ({ dispatch }) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  errorMessage: getAuthErrorMessage({ state })
+});
 
 export default connect(mapStateToProps)(AuthScreen);

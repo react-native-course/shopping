@@ -20,7 +20,11 @@ export const signup = ({ email, password }) => async (dispatch) => {
     const res = await AuthService.signUpUser({ email, password });
     dispatch({ type: SIGNUP });
   } catch (err) {
-    dispatch(setAuthErrorMessage(err.response.data));
+    if (typeof err.response.data === 'string') {
+      dispatch(setAuthErrorMessage(err.response.data));
+    } else {
+      dispatch(setAuthErrorMessage(err.response.data.error.message));
+    }
   }
 };
 
@@ -29,6 +33,10 @@ export const signin = ({ email, password }) => async (dispatch) => {
     const res = await AuthService.signInUser({ email, password });
     dispatch({ type: SIGNIN });
   } catch (err) {
-    dispatch(setAuthErrorMessage(err.response.data));
+    if (typeof err.response.data === 'string') {
+      dispatch(setAuthErrorMessage(err.response.data));
+    } else {
+      dispatch(setAuthErrorMessage(err.response.data.error.message));
+    }
   }
 };

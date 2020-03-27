@@ -45,7 +45,7 @@ export const fetchProducts = () => async (dispatch, getState) => {
       loadedProducts.push(
         new Product(
           key,
-          'u1',
+          value.ownerId,
           value.title,
           value.imageUrl,
           value.description,

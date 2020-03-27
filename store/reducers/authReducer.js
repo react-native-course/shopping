@@ -1,7 +1,6 @@
 //action types
 import {
-  SIGNIN,
-  SIGNUP,
+  AUTHENTICATE,
   SET_AUTH_ERROR_MESSAGE,
   RESET_AUTH_ERROR_MESSAGE
 } from '../actionTypes';
@@ -16,11 +15,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SIGNIN: {
-      const { token, userId } = action;
-      return updateObject(state, { token, userId });
-    }
-    case SIGNUP: {
+    case AUTHENTICATE: {
       const { token, userId } = action;
       return updateObject(state, { token, userId });
     }

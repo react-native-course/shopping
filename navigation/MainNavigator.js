@@ -8,6 +8,7 @@ import { ShopNavigator } from './ShopNavigator';
 import { defaultNavOptions } from './Helpers';
 //screens
 import AuthScreen from '../screens/user/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
 
 const AuthNavigator = createStackNavigator(
   {
@@ -24,6 +25,7 @@ const AuthNavigator = createStackNavigator(
 );
 
 const MainNavigator = createSwitchNavigator({
+  Startup: StartupScreen,
   Auth: AuthNavigator,
   Shop: ShopNavigator
 });

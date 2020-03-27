@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { FlatList, Alert } from 'react-native';
+import { FlatList, Alert, Text } from 'react-native';
 //selectors
 import {
   getOrders,
@@ -14,6 +14,7 @@ import {
 //components
 import OrderItem from '../../components/shop/OrderItem';
 import LoadingIcon from '../../components/UI/LoadingIcon';
+import CenteredWrapper from '../../components/UI/CenteredWrapper';
 
 const OrdersScreen = ({ orders, errorMessage, dispatch }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +47,15 @@ const OrdersScreen = ({ orders, errorMessage, dispatch }) => {
   //show loading icon if loading
   if (isLoading) {
     return <LoadingIcon />;
+  }
+
+  //show a message if no orders
+  if (orders.length === 0) {
+    return (
+      <CenteredWrapper>
+        <Text>No orders found, mayby start ordering some products?</Text>
+      </CenteredWrapper>
+    );
   }
 
   return (

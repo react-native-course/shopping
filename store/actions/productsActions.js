@@ -10,7 +10,7 @@ import {
   RESET_ADMIN_ERROR_MESSAGE
 } from '../actionTypes';
 //selectors
-import { getAuthToken } from '../selectors/authSelectors';
+import { getAuthToken, getAuthUserId } from '../selectors/authSelectors';
 //services
 import ProductsService from '../../services/ProductsService';
 //models
@@ -34,7 +34,9 @@ export const resetAdminErrorMessage = () => ({
   type: RESET_ADMIN_ERROR_MESSAGE
 });
 
-export const fetchProducts = () => async (dispatch) => {
+export const fetchProducts = () => async (dispatch, getState) => {
+  const state = getState(),
+    userId = getAuthUserId({ state });
   try {
     const res = await ProductsService.getProducts(),
       loadedProducts = [];
@@ -51,7 +53,11 @@ export const fetchProducts = () => async (dispatch) => {
         )
       );
     }
-    dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+    dispatch({
+      type: SET_PRODUCTS,
+      products: loadedProducts,
+      userProducts: loadedProducts.filter((prod) => prod.ownerId === userId)
+    });
   } catch (err) {
     dispatch(setProductsErrorMessage(err.response.data));
   }
@@ -64,14 +70,16 @@ export const createProduct = ({
   price
 }) => async (dispatch, getState) => {
   const state = getState(),
-    token = getAuthToken({ state });
+    token = getAuthToken({ state }),
+    userId = getAuthUserId({ state });
   try {
     const res = await ProductsService.createProduct({
       title,
       description,
       imageUrl,
       price,
-      token
+      token,
+      userId
     });
 
     dispatch({
@@ -81,7 +89,8 @@ export const createProduct = ({
         title,
         description,
         imageUrl,
-        price
+        price,
+        ownerId: userId
       }
     });
   } catch (err) {

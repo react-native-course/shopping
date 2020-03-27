@@ -6,7 +6,7 @@ import {
   RESET_ORDERS_ERROR_MESSAGE
 } from '../actionTypes';
 //selectors
-import { getAuthToken } from '../selectors/authSelectors';
+import { getAuthToken, getAuthUserId } from '../selectors/authSelectors';
 //services
 import OrdersService from '../../services/OrdersService';
 //models
@@ -21,9 +21,11 @@ export const resetOrdersErrorMessage = () => ({
   type: RESET_ORDERS_ERROR_MESSAGE
 });
 
-export const fetchOrders = () => async (dispatch) => {
+export const fetchOrders = () => async (dispatch, getState) => {
+  const state = getState(),
+    userId = getAuthUserId({ state });
   try {
-    const res = await OrdersService.getOrders('u1'),
+    const res = await OrdersService.getOrders(userId),
       loadedOrders = [];
 
     for (const [key, value] of Object.entries(res.data)) {
@@ -42,11 +44,12 @@ export const addOrder = ({ cartItems, totalAmount }) => async (
   getState
 ) => {
   const state = getState(),
-    token = getAuthToken({ state });
+    token = getAuthToken({ state }),
+    userId = getAuthUserId({ state });
   try {
     const date = new Date(),
       res = await OrdersService.createOrder({
-        userId: 'u1',
+        userId,
         cartItems,
         totalAmount,
         date: date.toISOString(),

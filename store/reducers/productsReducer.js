@@ -1,5 +1,3 @@
-//dummy data
-import PRODUCTS from '../../data/dummy-data';
 //action types
 import {
   SET_PRODUCTS,
@@ -17,8 +15,8 @@ import { updateObject } from '../utility';
 import Product from '../../models/product';
 
 const initialState = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
+  availableProducts: [],
+  userProducts: [],
   errorMessage: '',
   adminErrorMessage: ''
 };
@@ -26,16 +24,24 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PRODUCTS: {
+      const { products, userProducts } = action;
       return updateObject(state, {
-        availableProducts: action.products,
-        userProducts: action.products.filter((prod) => prod.ownerId === 'u1')
+        availableProducts: products,
+        userProducts
       });
     }
     case CREATE_PRODUCT: {
       const {
-          productData: { id, title, imageUrl, description, price }
+          productData: { id, title, imageUrl, description, price, ownerId }
         } = action,
-        newProduct = new Product(id, 'u1', title, imageUrl, description, price);
+        newProduct = new Product(
+          id,
+          ownerId,
+          title,
+          imageUrl,
+          description,
+          price
+        );
       return updateObject(state, {
         availableProducts: state.availableProducts.concat(newProduct),
         userProducts: state.userProducts.concat(newProduct)

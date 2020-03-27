@@ -9,7 +9,7 @@ class ProductsService {
       url: getProductsUrl()
     });
   }
-  static createProduct({ title, description, imageUrl, price, token }) {
+  static createProduct({ title, description, imageUrl, price, token, userId }) {
     return apiService({
       method: 'POST',
       url: getProductsUrl(),
@@ -17,7 +17,8 @@ class ProductsService {
         title,
         description,
         imageUrl,
-        price
+        price,
+        ownerId: userId
       },
       params: { auth: token }
     });

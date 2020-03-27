@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { FlatList, Button, Alert } from 'react-native';
+import { FlatList, Button, Alert, Text } from 'react-native';
 //selectors
 import {
   getUserProducts,
@@ -16,6 +16,7 @@ import Colors from '../../constants/Colors';
 //components
 import ProductItem from '../../components/shop/ProductItem';
 import LoadingIcon from '../../components/UI/LoadingIcon';
+import CenteredWrapper from '../../components/UI/CenteredWrapper';
 
 const UserProductsScreen = ({
   userProducts,
@@ -67,6 +68,15 @@ const UserProductsScreen = ({
   //show loading icon if loading
   if (isLoading) {
     return <LoadingIcon />;
+  }
+
+  //show a message if no products
+  if (userProducts.length === 0) {
+    return (
+      <CenteredWrapper>
+        <Text>No products found, mayby start creating some?</Text>
+      </CenteredWrapper>
+    );
   }
 
   return (

@@ -5,6 +5,8 @@ import {
   SET_ORDERS_ERROR_MESSAGE,
   RESET_ORDERS_ERROR_MESSAGE
 } from '../actionTypes';
+//selectors
+import { getAuthToken } from '../selectors/authSelectors';
 //services
 import OrdersService from '../../services/OrdersService';
 //models
@@ -35,14 +37,20 @@ export const fetchOrders = () => async (dispatch) => {
   }
 };
 
-export const addOrder = ({ cartItems, totalAmount }) => async (dispatch) => {
+export const addOrder = ({ cartItems, totalAmount }) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState(),
+    token = getAuthToken({ state });
   try {
     const date = new Date(),
       res = await OrdersService.createOrder({
         userId: 'u1',
         cartItems,
         totalAmount,
-        date: date.toISOString()
+        date: date.toISOString(),
+        token
       });
     dispatch({
       type: ADD_ORDER,

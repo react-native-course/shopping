@@ -9,7 +9,7 @@ class ProductsService {
       url: getProductsUrl()
     });
   }
-  static createProduct({ title, description, imageUrl, price }) {
+  static createProduct({ title, description, imageUrl, price, token }) {
     return apiService({
       method: 'POST',
       url: getProductsUrl(),
@@ -18,10 +18,11 @@ class ProductsService {
         description,
         imageUrl,
         price
-      }
+      },
+      params: { auth: token }
     });
   }
-  static updateProduct({ id, title, description, imageUrl }) {
+  static updateProduct({ id, title, description, imageUrl, token }) {
     return apiService({
       method: 'PATCH',
       url: getProductUrl(id),
@@ -29,13 +30,15 @@ class ProductsService {
         title,
         description,
         imageUrl
-      }
+      },
+      params: { auth: token }
     });
   }
-  static deleteProduct(id) {
+  static deleteProduct({ id, token }) {
     return apiService({
       method: 'DELETE',
-      url: getProductUrl(id)
+      url: getProductUrl(id),
+      params: { auth: token }
     });
   }
 }

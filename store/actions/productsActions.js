@@ -9,6 +9,8 @@ import {
   SET_ADMIN_ERROR_MESSAGE,
   RESET_ADMIN_ERROR_MESSAGE
 } from '../actionTypes';
+//selectors
+import { getAuthToken } from '../selectors/authSelectors';
 //services
 import ProductsService from '../../services/ProductsService';
 //models
@@ -60,13 +62,16 @@ export const createProduct = ({
   description,
   imageUrl,
   price
-}) => async (dispatch) => {
+}) => async (dispatch, getState) => {
+  const state = getState(),
+    token = getAuthToken({ state });
   try {
     const res = await ProductsService.createProduct({
       title,
       description,
       imageUrl,
-      price
+      price,
+      token
     });
 
     dispatch({
@@ -80,20 +85,28 @@ export const createProduct = ({
       }
     });
   } catch (err) {
-    dispatch(setAdminErrorMessage(err.response.data));
+    if (typeof err.response.data === 'string') {
+      dispatch(setAdminErrorMessage(err.response.data));
+    } else if (typeof err.response.data.error === 'string') {
+      dispatch(setAdminErrorMessage(err.response.data.error));
+    }
     throw new Error(err.response.data);
   }
 };
 
 export const updateProduct = ({ id, title, description, imageUrl }) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
+  const state = getState(),
+    token = getAuthToken({ state });
   try {
     await ProductsService.updateProduct({
       id,
       title,
       description,
-      imageUrl
+      imageUrl,
+      token
     });
 
     dispatch({
@@ -106,14 +119,23 @@ export const updateProduct = ({ id, title, description, imageUrl }) => async (
       }
     });
   } catch (err) {
-    dispatch(setAdminErrorMessage(err.response.data));
+    if (typeof err.response.data === 'string') {
+      dispatch(setAdminErrorMessage(err.response.data));
+    } else if (typeof err.response.data.error === 'string') {
+      dispatch(setAdminErrorMessage(err.response.data.error));
+    }
     throw new Error(err.response.data);
   }
 };
 
-export const deleteProduct = (productId) => async (dispatch) => {
+export const deleteProduct = (productId) => async (dispatch, getState) => {
+  const state = getState(),
+    token = getAuthToken({ state });
   try {
-    await ProductsService.deleteProduct(productId);
+    await ProductsService.deleteProduct({
+      id: productId,
+      token
+    });
     dispatch({
       type: DELETE_PRODUCT,
       pid: productId

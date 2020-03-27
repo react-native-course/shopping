@@ -9,11 +9,12 @@ class OrdersService {
       url: getOrdersUrl(userId)
     });
   }
-  static createOrder({ userId, cartItems, totalAmount, date }) {
+  static createOrder({ userId, cartItems, totalAmount, date, token }) {
     return apiService({
       method: 'POST',
       url: getOrdersUrl(userId),
-      data: { cartItems, totalAmount, date }
+      data: { cartItems, totalAmount, date },
+      params: { auth: token }
     });
   }
 }

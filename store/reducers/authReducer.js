@@ -1,5 +1,6 @@
 //action types
 import {
+  SIGNIN,
   SIGNUP,
   SET_AUTH_ERROR_MESSAGE,
   RESET_AUTH_ERROR_MESSAGE
@@ -8,13 +9,20 @@ import {
 import { updateObject } from '../utility';
 
 const initialState = {
+  token: null,
+  userId: null,
   errorMessage: ''
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SIGNIN: {
+      const { token, userId } = action;
+      return updateObject(state, { token, userId });
+    }
     case SIGNUP: {
-      return state;
+      const { token, userId } = action;
+      return updateObject(state, { token, userId });
     }
     case SET_AUTH_ERROR_MESSAGE: {
       return updateObject(state, { errorMessage: action.error });

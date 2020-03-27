@@ -71,7 +71,7 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = ({ errorMessage, dispatch }) => {
+const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
   const [isSignup, setIsSignup] = useState(false),
     [isLoading, setIsLoading] = useState(false);
   //form state
@@ -128,6 +128,7 @@ const AuthScreen = ({ errorMessage, dispatch }) => {
         );
       }
       setIsLoading(false);
+      navigate('Shop');
     } catch (err) {
       setIsLoading(false);
     }

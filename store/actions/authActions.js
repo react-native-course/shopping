@@ -10,6 +10,32 @@ import {
 //services
 import AuthService from '../../services/AuthService';
 
+let timer;
+
+const saveDataToStorage = ({ token, userId, expirationDate }) => {
+  AsyncStorage.setItem(
+    'userData',
+    JSON.stringify({ token, userId, expiryDate: expirationDate.toISOString() })
+  );
+};
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+};
+
+export const logout = () => {
+  clearLogoutTimer();
+  AsyncStorage.removeItem('userData');
+  return { type: LOGOUT };
+};
+
+const setLogoutTimer = (expirationTime) => (dispatch) => {
+  timer = setTimeout(() => {
+    dispatch(logout());
+  }, expirationTime);
+};
+
 const setAuthErrorMessage = (error) => ({
   type: SET_AUTH_ERROR_MESSAGE,
   error
@@ -17,17 +43,24 @@ const setAuthErrorMessage = (error) => ({
 
 export const resetAuthErrorMessage = () => ({ type: RESET_AUTH_ERROR_MESSAGE });
 
-export const authenticate = ({ userId, token }) => ({
-  type: AUTHENTICATE,
-  userId,
-  token
-});
+export const authenticate = ({ userId, token, expiryTime }) => (dispatch) => {
+  dispatch(setLogoutTimer(expiryTime));
+  dispatch({
+    type: AUTHENTICATE,
+    userId,
+    token
+  });
+};
 
 export const signup = ({ email, password }) => async (dispatch) => {
   try {
     const res = await AuthService.signUpUser({ email, password });
     dispatch(
-      authenticate({ token: res.data.idToken, userId: res.data.localId })
+      authenticate({
+        token: res.data.idToken,
+        userId: res.data.localId,
+        expiryTime: parseInt(res.data.expiresIn) * 1000
+      })
     );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(res.data.expiresIn) * 1000
@@ -50,7 +83,11 @@ export const signin = ({ email, password }) => async (dispatch) => {
   try {
     const res = await AuthService.signInUser({ email, password });
     dispatch(
-      authenticate({ token: res.data.idToken, userId: res.data.localId })
+      authenticate({
+        token: res.data.idToken,
+        userId: res.data.localId,
+        expiryTime: parseInt(res.data.expiresIn) * 1000
+      })
     );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(res.data.expiresIn) * 1000
@@ -67,13 +104,4 @@ export const signin = ({ email, password }) => async (dispatch) => {
       dispatch(setAuthErrorMessage(err.response.data.error.message));
     }
   }
-};
-
-export const logout = () => ({ type: LOGOUT });
-
-const saveDataToStorage = ({ token, userId, expirationDate }) => {
-  AsyncStorage.setItem(
-    'userData',
-    JSON.stringify({ token, userId, expiryDate: expirationDate.toISOString() })
-  );
 };

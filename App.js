@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 //redux
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
-//navigator
-import MainNavigator from './navigation/MainNavigator';
+//fonts
 import { loadAsync } from 'expo-font';
 import { AppLoading } from 'expo';
+//components
+import NavigationContainer from './navigation/NavigationContainer';
 
 const store = configureStore();
 
@@ -31,7 +32,7 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <MainNavigator />
+      <NavigationContainer />
     </Provider>
   );
 }

@@ -1,6 +1,7 @@
 //action types
 import {
   AUTHENTICATE,
+  LOGOUT,
   SET_AUTH_ERROR_MESSAGE,
   RESET_AUTH_ERROR_MESSAGE
 } from '../actionTypes';
@@ -18,6 +19,9 @@ const reducer = (state = initialState, action) => {
     case AUTHENTICATE: {
       const { token, userId } = action;
       return updateObject(state, { token, userId });
+    }
+    case LOGOUT: {
+      return initialState;
     }
     case SET_AUTH_ERROR_MESSAGE: {
       return updateObject(state, { errorMessage: action.error });

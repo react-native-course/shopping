@@ -1,5 +1,11 @@
+import React from 'react';
+import { SafeAreaView, View, Button } from 'react-native';
+//dispatch
+import { useDispatch } from 'react-redux';
 //drawer navigator
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+//actions
+import { logout } from '../store/actions/authActions';
 //constants
 import Colors from '../constants/Colors';
 //helpers
@@ -37,6 +43,24 @@ export const ShopNavigator = createDrawerNavigator(
   {
     contentOptions: {
       activeTintColor: Colors.primary
+    },
+    contentComponent: (props) => {
+      const dispatch = useDispatch();
+      return (
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+            <DrawerItems {...props} />
+            <Button
+              title="Sign out"
+              color={Colors.primary}
+              onPress={() => {
+                dispatch(logout());
+                props.navigation.navigate('Auth');
+              }}
+            />
+          </SafeAreaView>
+        </View>
+      );
     }
   }
 );

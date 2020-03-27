@@ -3,6 +3,7 @@ import { AsyncStorage } from 'react-native';
 //action types
 import {
   AUTHENTICATE,
+  LOGOUT,
   SET_AUTH_ERROR_MESSAGE,
   RESET_AUTH_ERROR_MESSAGE
 } from '../actionTypes';
@@ -67,6 +68,8 @@ export const signin = ({ email, password }) => async (dispatch) => {
     }
   }
 };
+
+export const logout = () => ({ type: LOGOUT });
 
 const saveDataToStorage = ({ token, userId, expirationDate }) => {
   AsyncStorage.setItem(

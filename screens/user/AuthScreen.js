@@ -142,7 +142,7 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
     >
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
         <Card style={styles.authContainer}>
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps="always">
             <Input
               id="email"
               label="E-Mail"

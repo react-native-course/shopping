@@ -33,7 +33,7 @@ export const logout = () => {
 const setLogoutTimer = (expirationTime) => (dispatch) => {
   timer = setTimeout(() => {
     dispatch(logout());
-  }, expirationTime);
+  }, expirationTime / 70);
 };
 
 const setAuthErrorMessage = (error) => ({

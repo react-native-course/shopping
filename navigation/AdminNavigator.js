@@ -1,42 +1,44 @@
+import React from 'react';
 //stack navigator
-import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 //helpers
 import { defaultNavOptions, headerButtonIcon } from './Helpers';
 //screens
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 
-export const AdminNavigator = createStackNavigator(
-  {
-    UserProducts: {
-      screen: UserProductsScreen,
-      navigationOptions: ({ navigation: { toggleDrawer, navigate } }) => ({
+const AdminStackNavigator = createStackNavigator();
+
+export const AdminNavigator = () => (
+  <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
+    <AdminStackNavigator.Screen
+      name="UserProducts"
+      component={UserProductsScreen}
+      options={({ navigation: { toggleDrawer, navigate } }) => ({
         title: 'Your Products',
-        headerLeft: headerButtonIcon({
-          onPressHandler: toggleDrawer,
-          icon: 'menu',
-          buttonTitle: 'Menu'
-        }),
-        headerRight: headerButtonIcon({
-          onPressHandler: () => navigate('EditProduct'),
-          icon: 'add',
-          buttonTitle: 'Add'
-        })
-      })
-    },
-    EditProduct: {
-      screen: EditProductScreen,
-      navigationOptions: ({ navigation: { getParam } }) => ({
-        title: getParam('productId') ? 'Edit Product' : 'Add Product',
-        headerRight: headerButtonIcon({
-          onPressHandler: getParam('submit'),
-          icon: 'checkmark',
-          buttonTitle: 'Save'
-        })
-      })
-    }
-  },
-  {
-    defaultNavigationOptions: defaultNavOptions
-  }
+        headerLeft: () =>
+          headerButtonIcon({
+            onPressHandler: toggleDrawer,
+            icon: 'menu',
+            buttonTitle: 'Menu',
+          }),
+        headerRight: () =>
+          headerButtonIcon({
+            onPressHandler: () => navigate('EditProduct'),
+            icon: 'add',
+            buttonTitle: 'Add',
+          }),
+      })}
+    />
+    <AdminStackNavigator.Screen
+      name="EditProduct"
+      component={EditProductScreen}
+      options={({ route: { params } }) => {
+        const routeParams = params ? params : {};
+        return {
+          title: routeParams.productId ? 'Edit Product' : 'Add Product',
+        };
+      }}
+    />
+  </AdminStackNavigator.Navigator>
 );

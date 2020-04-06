@@ -19,6 +19,8 @@ import {
   updateProduct,
   resetAdminErrorMessage,
 } from '../../store/actions/productsActions';
+//navigation helpers
+import { headerButtonIcon } from '../../navigation/Helpers';
 //components
 import Input from '../../components/UI/Input';
 import LoadingIcon from '../../components/UI/LoadingIcon';
@@ -57,14 +59,15 @@ const formReducer = (state, action) => {
 };
 
 const EditProductScreen = ({
-  navigation: { goBack, getParam, setParams },
+  navigation: { goBack, setOptions },
+  route: { params },
   userProducts,
   adminErrorMessage,
   dispatch,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const prodId = getParam('productId'),
+  const prodId = params ? params.productId : null,
     editedProduct = userProducts.find((prod) => prod.id === prodId);
 
   //form state
@@ -141,7 +144,14 @@ const EditProductScreen = ({
 
   //pass the submit method to the navigation
   useEffect(() => {
-    setParams({ submit: submitHandler });
+    setOptions({
+      headerRight: () =>
+        headerButtonIcon({
+          onPressHandler: submitHandler,
+          icon: 'checkmark',
+          buttonTitle: 'Save',
+        }),
+    });
   }, [submitHandler]);
 
   //change handler for form inputs

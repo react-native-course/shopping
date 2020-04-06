@@ -6,7 +6,7 @@ import {
   Text,
   Image,
   Button,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 //selectors
 import { getAvailableProducts } from '../../store/selectors/productsSelectors';
@@ -18,33 +18,33 @@ import Colors from '../../constants/Colors';
 const styles = StyleSheet.create({
   image: {
     width: '100%',
-    height: 300
+    height: 300,
   },
   price: {
     fontFamily: 'open-sans-bold',
     fontSize: 20,
     color: '#888',
     textAlign: 'center',
-    marginVertical: 20
+    marginVertical: 20,
   },
   description: {
     fontFamily: 'open-sans',
     fontSize: 14,
     textAlign: 'center',
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   actions: {
     marginVertical: 10,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 const ProductDetailScreen = ({
-  navigation: { getParam },
+  route: { params },
   availableProducts,
-  dispatch
+  dispatch,
 }) => {
-  const productId = getParam('productId'),
+  const productId = params.productId,
     selectedProduct = availableProducts.find((prod) => prod.id === productId);
 
   return (
@@ -66,7 +66,7 @@ const ProductDetailScreen = ({
 };
 
 const mapStateToProps = (state) => ({
-  availableProducts: getAvailableProducts({ state })
+  availableProducts: getAvailableProducts({ state }),
 });
 
 export default connect(mapStateToProps)(ProductDetailScreen);

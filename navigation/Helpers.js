@@ -13,15 +13,15 @@ import CustomHeaderButton from '../components/UI/CustomHeaderButton';
 //default options for stack navigators
 export const defaultNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === 'android' ? Colors.primary : ''
+    backgroundColor: Platform.OS === 'android' ? Colors.primary : '',
   },
   headerTitleStyle: {
-    fontFamily: 'open-sans-bold'
+    fontFamily: 'open-sans-bold',
   },
   headerBackTitleStyle: {
-    fontFamily: 'open-sans'
+    fontFamily: 'open-sans',
   },
-  headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primary
+  headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primary,
 };
 
 //header button icon
@@ -40,10 +40,10 @@ export const headerButtonIcon = ({ onPressHandler, icon, buttonTitle }) => (
 );
 
 //icon for the drawer label
-export const setDrawerIcon = ({ drawerConfig, iconName }) => (
+export const setDrawerIcon = ({ color, iconName }) => (
   <Ionicons
     name={Platform.OS === 'android' ? `md-${iconName}` : `ios-${iconName}`}
     size={23}
-    color={drawerConfig.tintColor}
+    color={color}
   />
 );

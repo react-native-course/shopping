@@ -6,14 +6,14 @@ import configureStore from './store/configureStore';
 import { loadAsync } from 'expo-font';
 import { AppLoading } from 'expo';
 //components
-import NavigationContainer from './navigation/NavigationContainer';
+import AppNavigator from './navigation/AppNavigator';
 
 const store = configureStore();
 
 const fetchFonts = () => {
   return loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });
 };
 
@@ -32,7 +32,7 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <NavigationContainer />
+      <AppNavigator />
     </Provider>
   );
 }

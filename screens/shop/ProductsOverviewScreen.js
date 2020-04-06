@@ -4,13 +4,13 @@ import { Text, FlatList, Button } from 'react-native';
 //selectors
 import {
   getAvailableProducts,
-  getProductsErrorMessage
+  getProductsErrorMessage,
 } from '../../store/selectors/productsSelectors';
 //actions
 import { addToCart } from '../../store/actions/cartActions';
 import {
   fetchProducts,
-  resetProductsErrorMessage
+  resetProductsErrorMessage,
 } from '../../store/actions/productsActions';
 //constants
 import Colors from '../../constants/Colors';
@@ -23,7 +23,7 @@ const ProductsOverviewScreen = ({
   availableProducts,
   errorMessage,
   navigation: { navigate, addListener },
-  dispatch
+  dispatch,
 }) => {
   const [isLoading, setIsLoading] = useState(false),
     [isRefreshing, setIsRefreshing] = useState(false);
@@ -44,10 +44,10 @@ const ProductsOverviewScreen = ({
 
   //add event listener on navigation
   useEffect(() => {
-    const willFocusSub = addListener('willFocus', loadProducts);
+    const unsubscribe = addListener('focus', loadProducts);
 
     return () => {
-      willFocusSub.remove();
+      unsubscribe();
     };
   }, [loadProducts]);
 
@@ -63,7 +63,7 @@ const ProductsOverviewScreen = ({
   const selectItemHandler = ({ id, title }) => {
     navigate('ProductDetail', {
       productId: id,
-      productTitle: title
+      productTitle: title,
     });
   };
 
@@ -102,7 +102,7 @@ const ProductsOverviewScreen = ({
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => {
         const {
-          item: { id, imageUrl, title, price }
+          item: { id, imageUrl, title, price },
         } = itemData;
         return (
           <ProductItem
@@ -112,7 +112,7 @@ const ProductsOverviewScreen = ({
             onSelect={() => {
               selectItemHandler({
                 id: id,
-                title: title
+                title: title,
               });
             }}
           >
@@ -121,7 +121,7 @@ const ProductsOverviewScreen = ({
               onPress={() => {
                 selectItemHandler({
                   id: id,
-                  title: title
+                  title: title,
                 });
               }}
               color={Colors.primary}
@@ -142,7 +142,7 @@ const ProductsOverviewScreen = ({
 
 const mapStateToProps = (state) => ({
   availableProducts: getAvailableProducts({ state }),
-  errorMessage: getProductsErrorMessage({ state })
+  errorMessage: getProductsErrorMessage({ state }),
 });
 
 export default connect(mapStateToProps)(ProductsOverviewScreen);

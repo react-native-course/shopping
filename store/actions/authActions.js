@@ -4,8 +4,9 @@ import { AsyncStorage } from 'react-native';
 import {
   AUTHENTICATE,
   LOGOUT,
+  SET_DID_TRY_AL,
   SET_AUTH_ERROR_MESSAGE,
-  RESET_AUTH_ERROR_MESSAGE
+  RESET_AUTH_ERROR_MESSAGE,
 } from '../actionTypes';
 //services
 import AuthService from '../../services/AuthService';
@@ -36,9 +37,13 @@ const setLogoutTimer = (expirationTime) => (dispatch) => {
   }, expirationTime / 70);
 };
 
+export const setDidTryAl = () => ({
+  type: SET_DID_TRY_AL,
+});
+
 const setAuthErrorMessage = (error) => ({
   type: SET_AUTH_ERROR_MESSAGE,
-  error
+  error,
 });
 
 export const resetAuthErrorMessage = () => ({ type: RESET_AUTH_ERROR_MESSAGE });
@@ -48,7 +53,7 @@ export const authenticate = ({ userId, token, expiryTime }) => (dispatch) => {
   dispatch({
     type: AUTHENTICATE,
     userId,
-    token
+    token,
   });
 };
 
@@ -59,7 +64,7 @@ export const signup = ({ email, password }) => async (dispatch) => {
       authenticate({
         token: res.data.idToken,
         userId: res.data.localId,
-        expiryTime: parseInt(res.data.expiresIn) * 1000
+        expiryTime: parseInt(res.data.expiresIn) * 1000,
       })
     );
     const expirationDate = new Date(
@@ -68,7 +73,7 @@ export const signup = ({ email, password }) => async (dispatch) => {
     saveDataToStorage({
       token: res.data.idToken,
       userId: res.data.localId,
-      expirationDate
+      expirationDate,
     });
   } catch (err) {
     if (typeof err.response.data === 'string') {
@@ -86,7 +91,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
       authenticate({
         token: res.data.idToken,
         userId: res.data.localId,
-        expiryTime: parseInt(res.data.expiresIn) * 1000
+        expiryTime: parseInt(res.data.expiresIn) * 1000,
       })
     );
     const expirationDate = new Date(
@@ -95,7 +100,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
     saveDataToStorage({
       token: res.data.idToken,
       userId: res.data.localId,
-      expirationDate
+      expirationDate,
     });
   } catch (err) {
     if (typeof err.response.data === 'string') {

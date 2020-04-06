@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AsyncStorage } from 'react-native';
 //actions
-import { authenticate } from '../store/actions/authActions';
+import { authenticate, setDidTryAl } from '../store/actions/authActions';
 //components
 import LoadingIcon from '../components/UI/LoadingIcon';
 
-const StartupScreen = ({ navigation: { navigate }, dispatch }) => {
+const StartupScreen = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const tryLogin = async () => {
       try {
         const userData = await AsyncStorage.getItem('userData');
         if (!userData) {
-          navigate('Auth');
+          dispatch(setDidTryAl());
           return;
         }
         const transformedData = JSON.parse(userData),
@@ -20,12 +22,11 @@ const StartupScreen = ({ navigation: { navigate }, dispatch }) => {
           expirationDate = new Date(expiryDate);
 
         if (expirationDate <= new Date() || !token || !userId) {
-          navigate('Auth');
+          dispatch(setDidTryAl());
           return;
         }
 
         const expirationTime = expirationDate.getTime() - new Date().getTime();
-        navigate('Shop');
         dispatch(authenticate({ token, userId, expiryTime: expirationTime }));
       } catch (err) {}
     };
@@ -35,4 +36,4 @@ const StartupScreen = ({ navigation: { navigate }, dispatch }) => {
   return <LoadingIcon />;
 };
 
-export default connect()(StartupScreen);
+export default StartupScreen;

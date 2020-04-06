@@ -7,7 +7,8 @@ import {
   Button,
   ActivityIndicator,
   Alert,
-  StyleSheet
+  Platform,
+  StyleSheet,
 } from 'react-native';
 //linear gradient
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,7 +18,7 @@ import { getAuthErrorMessage } from '../../store/selectors/authSelectors';
 import {
   signup,
   signin,
-  resetAuthErrorMessage
+  resetAuthErrorMessage,
 } from '../../store/actions/authActions';
 //components
 import Input from '../../components/UI/Input';
@@ -26,22 +27,22 @@ import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   gradient: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   authContainer: {
     width: '80%',
     maxWidth: 400,
     maxHeight: 400,
-    padding: 20
+    padding: 20,
   },
   buttonContainer: {
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 //action type for formReducer
@@ -52,11 +53,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.input]: action.value
+      [action.input]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.input]: action.isValid
+      [action.input]: action.isValid,
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
@@ -65,7 +66,7 @@ const formReducer = (state, action) => {
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
-      inputValues: updatedValues
+      inputValues: updatedValues,
     };
   }
   return state;
@@ -78,13 +79,13 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
-      password: ''
+      password: '',
     },
     inputValidities: {
       email: false,
-      password: false
+      password: false,
     },
-    formIsValid: false
+    formIsValid: false,
   });
 
   //change handler for form inputs
@@ -94,7 +95,7 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -116,14 +117,14 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
         await dispatch(
           signup({
             email: formState.inputValues.email,
-            password: formState.inputValues.password
+            password: formState.inputValues.password,
           })
         );
       } else {
         await dispatch(
           signin({
             email: formState.inputValues.email,
-            password: formState.inputValues.password
+            password: formState.inputValues.password,
           })
         );
       }
@@ -136,8 +137,7 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
-      KeyboardAvoidingView={50}
+      behavior={Platform.Os == 'ios' ? 'padding' : 'height'}
       style={styles.screen}
     >
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
@@ -194,7 +194,7 @@ const AuthScreen = ({ errorMessage, navigation: { navigate }, dispatch }) => {
 };
 
 const mapStateToProps = (state) => ({
-  errorMessage: getAuthErrorMessage({ state })
+  errorMessage: getAuthErrorMessage({ state }),
 });
 
 export default connect(mapStateToProps)(AuthScreen);

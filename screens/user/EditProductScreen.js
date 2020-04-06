@@ -5,18 +5,19 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
-  StyleSheet
+  Platform,
+  StyleSheet,
 } from 'react-native';
 //selectors
 import {
   getUserProducts,
-  getAdminErrorMessage
+  getAdminErrorMessage,
 } from '../../store/selectors/productsSelectors';
 //actions
 import {
   createProduct,
   updateProduct,
-  resetAdminErrorMessage
+  resetAdminErrorMessage,
 } from '../../store/actions/productsActions';
 //components
 import Input from '../../components/UI/Input';
@@ -24,8 +25,8 @@ import LoadingIcon from '../../components/UI/LoadingIcon';
 
 const styles = StyleSheet.create({
   form: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });
 
 //action type for formReducer
@@ -36,11 +37,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.input]: action.value
+      [action.input]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.input]: action.isValid
+      [action.input]: action.isValid,
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
@@ -49,7 +50,7 @@ const formReducer = (state, action) => {
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
-      inputValues: updatedValues
+      inputValues: updatedValues,
     };
   }
   return state;
@@ -59,7 +60,7 @@ const EditProductScreen = ({
   navigation: { goBack, getParam, setParams },
   userProducts,
   adminErrorMessage,
-  dispatch
+  dispatch,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,22 +73,22 @@ const EditProductScreen = ({
       title: editedProduct ? editedProduct.title : '',
       imageUrl: editedProduct ? editedProduct.imageUrl : '',
       description: editedProduct ? editedProduct.description : '',
-      price: ''
+      price: '',
     },
     inputValidities: {
       title: editedProduct ? true : false,
       imageUrl: editedProduct ? true : false,
       description: editedProduct ? true : false,
-      price: editedProduct ? true : false
+      price: editedProduct ? true : false,
     },
-    formIsValid: editedProduct ? true : false
+    formIsValid: editedProduct ? true : false,
   });
 
   //show alert if error
   useEffect(() => {
     if (adminErrorMessage) {
       Alert.alert('An error has occured', adminErrorMessage, [
-        { text: 'Okay' }
+        { text: 'Okay' },
       ]);
     }
     return () => {
@@ -100,7 +101,7 @@ const EditProductScreen = ({
     //show alert message if the form is not valid
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
-        { text: 'Okay' }
+        { text: 'Okay' },
       ]);
       return;
     }
@@ -116,7 +117,7 @@ const EditProductScreen = ({
             id: prodId,
             title: formState.inputValues.title,
             description: formState.inputValues.description,
-            imageUrl: formState.inputValues.imageUrl
+            imageUrl: formState.inputValues.imageUrl,
           })
         );
       }
@@ -127,7 +128,7 @@ const EditProductScreen = ({
             title: formState.inputValues.title,
             description: formState.inputValues.description,
             imageUrl: formState.inputValues.imageUrl,
-            price: +formState.inputValues.price
+            price: +formState.inputValues.price,
           })
         );
       }
@@ -150,7 +151,7 @@ const EditProductScreen = ({
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -164,8 +165,7 @@ const EditProductScreen = ({
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={100}
+      behavior={Platform.Os == 'ios' ? 'padding' : 'height'}
     >
       <ScrollView>
         <View style={styles.form}>
@@ -228,7 +228,7 @@ const EditProductScreen = ({
 
 const mapStateToProps = (state) => ({
   userProducts: getUserProducts({ state }),
-  adminErrorMessage: getAdminErrorMessage({ state })
+  adminErrorMessage: getAdminErrorMessage({ state }),
 });
 
 export default connect(mapStateToProps)(EditProductScreen);

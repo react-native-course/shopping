@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlatList, Button, Alert, Text } from 'react-native';
 //selectors
 import {
@@ -19,12 +19,12 @@ import LoadingIcon from '../../components/UI/LoadingIcon';
 import CenteredWrapper from '../../components/UI/CenteredWrapper';
 
 const UserProductsScreen = ({
-  userProducts,
-  adminErrorMessage,
-  dispatch,
   navigation: { navigate }
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const userProducts = useSelector(state => getUserProducts({ state })),
+        adminErrorMessage = useSelector(state => getAdminErrorMessage({ state })),
+        dispatch = useDispatch(),
+        [isLoading, setIsLoading] = useState(false);
 
   //show alert if error
   useEffect(() => {
@@ -112,9 +112,4 @@ const UserProductsScreen = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  userProducts: getUserProducts({ state }),
-  adminErrorMessage: getAdminErrorMessage({ state })
-});
-
-export default connect(mapStateToProps)(UserProductsScreen);
+export default UserProductsScreen;

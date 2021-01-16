@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ScrollView,
   View,
@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
 
 const ProductDetailScreen = ({
   route: { params },
-  availableProducts,
-  dispatch,
 }) => {
-  const productId = params.productId,
-    selectedProduct = availableProducts.find((prod) => prod.id === productId);
+  const availableProducts = useSelector(state => getAvailableProducts({ state })),
+        dispatch = useDispatch(),
+        productId = params.productId,
+        selectedProduct = availableProducts.find((prod) => prod.id === productId);
 
   return (
     <ScrollView>
@@ -65,8 +65,4 @@ const ProductDetailScreen = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  availableProducts: getAvailableProducts({ state }),
-});
-
-export default connect(mapStateToProps)(ProductDetailScreen);
+export default ProductDetailScreen;

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useReducer, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   ScrollView,
@@ -60,15 +60,14 @@ const formReducer = (state, action) => {
 
 const EditProductScreen = ({
   navigation: { goBack, setOptions },
-  route: { params },
-  userProducts,
-  adminErrorMessage,
-  dispatch,
+  route: { params },  
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const prodId = params ? params.productId : null,
-    editedProduct = userProducts.find((prod) => prod.id === prodId);
+  const userProducts = useSelector(state => getUserProducts({ state })),
+        adminErrorMessage = useSelector(state => getAdminErrorMessage({ state })),
+        dispatch = useDispatch(),
+        [isLoading, setIsLoading] = useState(false),
+        prodId = params ? params.productId : null,
+        editedProduct = userProducts.find((prod) => prod.id === prodId);
 
   //form state
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -236,9 +235,4 @@ const EditProductScreen = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  userProducts: getUserProducts({ state }),
-  adminErrorMessage: getAdminErrorMessage({ state }),
-});
-
-export default connect(mapStateToProps)(EditProductScreen);
+export default EditProductScreen;

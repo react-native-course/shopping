@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   View,
   Text,
@@ -47,8 +47,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const CartScreen = ({ items, totalAmount, errorMessage, dispatch }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const CartScreen = () => {
+  const items = useSelector(state => getCartItems({ state })),
+        totalAmount = useSelector(state => getCartTotalAmount({ state })),
+        errorMessage = useSelector(state => getOrdersErrorMessage({ state })),
+        dispatch = useDispatch(),
+        [isLoading, setIsLoading] = useState(false);
 
   //show alert if error
   useEffect(() => {
@@ -130,10 +134,4 @@ const CartScreen = ({ items, totalAmount, errorMessage, dispatch }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  items: getCartItems({ state }),
-  totalAmount: getCartTotalAmount({ state }),
-  errorMessage: getOrdersErrorMessage({ state })
-});
-
-export default connect(mapStateToProps)(CartScreen);
+export default CartScreen;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Text, FlatList, Button } from 'react-native';
 //selectors
 import {
@@ -19,14 +19,14 @@ import ProductItem from '../../components/shop/ProductItem';
 import CenteredWrapper from '../../components/UI/CenteredWrapper';
 import LoadingIcon from '../../components/UI/LoadingIcon';
 
-const ProductsOverviewScreen = ({
-  availableProducts,
-  errorMessage,
+const ProductsOverviewScreen = ({ 
   navigation: { navigate, addListener },
-  dispatch,
 }) => {
-  const [isLoading, setIsLoading] = useState(false),
-    [isRefreshing, setIsRefreshing] = useState(false);
+  const availableProducts = useSelector(state => getAvailableProducts({ state })),
+        errorMessage = useSelector(state => getProductsErrorMessage({ state })),
+        dispatch = useDispatch(),
+        [isLoading, setIsLoading] = useState(false),
+        [isRefreshing, setIsRefreshing] = useState(false);
 
   //fetch products from the backend
   const loadProducts = useCallback(async () => {
@@ -140,9 +140,4 @@ const ProductsOverviewScreen = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  availableProducts: getAvailableProducts({ state }),
-  errorMessage: getProductsErrorMessage({ state }),
-});
-
-export default connect(mapStateToProps)(ProductsOverviewScreen);
+export default ProductsOverviewScreen;

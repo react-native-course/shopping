@@ -1,5 +1,5 @@
 import React, { useReducer, useCallback, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
   ScrollView,
@@ -72,9 +72,11 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = ({ errorMessage, dispatch }) => {
-  const [isSignup, setIsSignup] = useState(false),
-    [isLoading, setIsLoading] = useState(false);
+const AuthScreen = () => {
+  const errorMessage = useSelector(state => getAuthErrorMessage({ state })),
+        dispatch= useDispatch(),
+        [isSignup, setIsSignup] = useState(false),
+        [isLoading, setIsLoading] = useState(false);
   //form state
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -192,8 +194,4 @@ const AuthScreen = ({ errorMessage, dispatch }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  errorMessage: getAuthErrorMessage({ state }),
-});
-
-export default connect(mapStateToProps)(AuthScreen);
+export default AuthScreen;

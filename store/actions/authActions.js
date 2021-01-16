@@ -49,7 +49,7 @@ const setAuthErrorMessage = (error) => ({
 export const resetAuthErrorMessage = () => ({ type: RESET_AUTH_ERROR_MESSAGE });
 
 export const authenticate = ({ userId, token, expiryTime }) => (dispatch) => {
-  dispatch(setLogoutTimer(expiryTime));
+  //dispatch(setLogoutTimer(expiryTime));
   dispatch({
     type: AUTHENTICATE,
     userId,

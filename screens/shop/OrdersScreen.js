@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlatList, Alert, Text } from 'react-native';
 //selectors
 import {
@@ -16,8 +16,11 @@ import OrderItem from '../../components/shop/OrderItem';
 import LoadingIcon from '../../components/UI/LoadingIcon';
 import CenteredWrapper from '../../components/UI/CenteredWrapper';
 
-const OrdersScreen = ({ orders, errorMessage, dispatch }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const OrdersScreen = () => {
+  const orders = useSelector(state => getOrders({ state })),
+        errorMessage = useSelector(state => getOrdersErrorMessage({ state })),
+        dispatch = useDispatch(),
+        [isLoading, setIsLoading] = useState(false);
 
   const getOrdersList = async () => {
     setIsLoading(true);
@@ -74,9 +77,4 @@ const OrdersScreen = ({ orders, errorMessage, dispatch }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  orders: getOrders({ state }),
-  errorMessage: getOrdersErrorMessage({ state })
-});
-
-export default connect(mapStateToProps)(OrdersScreen);
+export default OrdersScreen;
